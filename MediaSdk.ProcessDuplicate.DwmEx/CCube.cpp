@@ -59,11 +59,11 @@ namespace MediaSdk
 			this->InitDevice();
 		}
 
-		HRESULT CCube::Render(ID3D11Texture2D* pResource, bool isNewSurface)
+		HRESULT CCube::Render(void* pResource, bool isNewSurface)
 		{
 			HRESULT hr = S_OK;
 
-			if (isNewSurface)
+			/*if (isNewSurface)
 			{
 				m_pImmediateContext->OMSetRenderTargets(0, NULL, NULL);
 				hr = InitRenderTarget(pResource);
@@ -77,7 +77,7 @@ namespace MediaSdk
 			if (NULL != m_pImmediateContext)
 			{
 				m_pImmediateContext->Flush();
-			}
+			}*/
 			return hr;
 		}
 

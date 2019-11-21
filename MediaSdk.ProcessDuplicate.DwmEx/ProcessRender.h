@@ -41,7 +41,10 @@ namespace MediaSdk
 
 			ProcessRender();
 			~ProcessRender();
+			void ResizeSurface();
 			void OnRenderSizeChanged(SizeChangedInfo^ info) override;
+			void DoRender(IntPtr surface, bool isNewSurface);
+			void OnLoaded(System::Object^ sender, System::Windows::RoutedEventArgs^ e);
 		};
 	}
 }

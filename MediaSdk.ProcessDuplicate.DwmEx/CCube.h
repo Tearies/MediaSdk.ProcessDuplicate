@@ -25,7 +25,7 @@ namespace MediaSdk
 			void InitDevice();
 		public:
 			CCube();
-			HRESULT Render(ID3D11Texture2D* pResource, bool isNewSurface);
+			HRESULT Render(void* pResource, bool isNewSurface);
 			HRESULT InitRenderTarget(ID3D11Texture2D* pResource);
 			void SetUpViewport();
 		};

@@ -26,7 +26,7 @@ namespace MediaSdk.ProcessDuplicate.Client
         {
             InitializeComponent();
             
-            Loaded += MainWindow_Loaded;
+           
         }
 
       

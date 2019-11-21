@@ -15,7 +15,7 @@ void ProcessDuplicateManager::OnClockTick(Object^ sender, EventArgs^ args)
 
 void ProcessDuplicateManager::DoRender()
 {
-	//this->process_configuration->Render->Cube->Render(dwm_ex_manager->SharedResource, false);
+	process_configuration->ImageSource->RequestRender();
 }
 
 ProcessDuplicateManager::ProcessDuplicateManager() :
@@ -36,9 +36,9 @@ ProcessDuplicateManager::~ProcessDuplicateManager()
 void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
 {
 	process_configuration = configuration;
-	targetProcess = Process::Start(process_configuration->AppPath);
+	/*targetProcess = Process::Start(process_configuration->AppPath);
 	targetProcess->WaitForInputIdle();
-	dwm_ex_manager->Initialize(reinterpret_cast<HWND>(targetProcess->MainWindowHandle.ToInt32()));
+	dwm_ex_manager->Initialize(reinterpret_cast<HWND>(targetProcess->MainWindowHandle.ToInt32()));*/
 	 //process_configuration->ImageSource->
 	media_context->ClockTick += gcnew System::EventHandler(this, &ProcessDuplicateManager::OnClockTick);
 	media_context->Start();
