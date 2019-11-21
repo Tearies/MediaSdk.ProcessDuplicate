@@ -22,11 +22,14 @@ namespace MediaSdk
 			ID3D11Buffer* m_pVertexBuffer;
 			ID3D11Buffer* m_pIndexBuffer = NULL;
 			ID3D11Buffer* m_pConstantBuffer = NULL;
-			void InitDevice();
+			void InitDevice(); 
+			double RandFloat() {
+				return (float)(rand() / (float)RAND_MAX);
+			}
 		public:
 			CCube();
 			HRESULT Render(void* pResource, bool isNewSurface);
-			HRESULT InitRenderTarget(ID3D11Texture2D* pResource);
+			HRESULT InitRenderTarget(void* pResource);
 			void SetUpViewport();
 		};
 	}

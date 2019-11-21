@@ -35,8 +35,8 @@ namespace MediaSdk
 			for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; ++driverTypeIndex)
 			{
 				hr = D3D11CreateDevice(NULL, driverTypes[driverTypeIndex], NULL, createDeviceFlags, featureLevels,
-				                       numFeatureLevels,
-				                       D3D11_SDK_VERSION, &pd3dDevice, &featureLevel, &pImmediateContext);
+					numFeatureLevels,
+					D3D11_SDK_VERSION, &pd3dDevice, &featureLevel, &pImmediateContext);
 
 				if (SUCCEEDED(hr))
 				{
@@ -63,7 +63,7 @@ namespace MediaSdk
 		{
 			HRESULT hr = S_OK;
 
-			/*if (isNewSurface)
+			if (isNewSurface)
 			{
 				m_pImmediateContext->OMSetRenderTargets(0, NULL, NULL);
 				hr = InitRenderTarget(pResource);
@@ -72,31 +72,68 @@ namespace MediaSdk
 					return hr;
 				}
 			}
-			static float ClearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+
+			float ClearColor[4] = { RandFloat(), RandFloat(), RandFloat(), 1.0f };
 			m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
+
+
+
 			if (NULL != m_pImmediateContext)
 			{
 				m_pImmediateContext->Flush();
-			}*/
+			}
 			return hr;
 		}
 
-		HRESULT CCube::InitRenderTarget(ID3D11Texture2D* pResource)
+		HRESULT CCube::InitRenderTarget(void* pResource)
 		{
 			HRESULT hr = S_OK;
-			ID3D11RenderTargetView* pRenderTargetView;
-			D3D11_RENDER_TARGET_VIEW_DESC rtDesc;
-			rtDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-			rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-			rtDesc.Texture2D.MipSlice = 0;
-			hr = m_pd3dDevice->CreateRenderTargetView(pResource, &rtDesc, &pRenderTargetView);
+			IUnknown* pUnk = (IUnknown*)pResource;
+
+			IDXGIResource* pDXGIResource;
+			hr = pUnk->QueryInterface(__uuidof(IDXGIResource), (void**)&pDXGIResource);
 			if (FAILED(hr))
 			{
 				return hr;
 			}
-			m_pRenderTargetView = pRenderTargetView;
+
+			HANDLE sharedHandle;
+			hr = pDXGIResource->GetSharedHandle(&sharedHandle);
+			if (FAILED(hr))
+			{
+				return hr;
+			}
+
+			pDXGIResource->Release();
+
+			IUnknown* tempResource11;
+			hr = m_pd3dDevice->OpenSharedResource(sharedHandle, __uuidof(ID3D11Resource), (void**)(&tempResource11));
+			if (FAILED(hr))
+			{
+				return hr;
+			}
+
+			ID3D11Texture2D* pOutputResource;
+			hr = tempResource11->QueryInterface(__uuidof(ID3D11Texture2D), (void**)(&pOutputResource));
+			if (FAILED(hr))
+			{
+				return hr;
+			}
+			tempResource11->Release();
+
+			D3D11_RENDER_TARGET_VIEW_DESC rtDesc;
+			rtDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+			rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+			rtDesc.Texture2D.MipSlice = 0;
+			ID3D11RenderTargetView* pRenderTargetView;
+			hr = m_pd3dDevice->CreateRenderTargetView(pOutputResource, &rtDesc, &pRenderTargetView);
+			if (FAILED(hr))
+			{
+				return hr;
+			}
+
 			D3D11_TEXTURE2D_DESC outputResourceDesc;
-			pResource->GetDesc(&outputResourceDesc);
+			pOutputResource->GetDesc(&outputResourceDesc);
 			if (outputResourceDesc.Width != m_Width || outputResourceDesc.Height != m_Height)
 			{
 				m_Width = outputResourceDesc.Width;
@@ -107,9 +144,10 @@ namespace MediaSdk
 
 			m_pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView, NULL);
 
-			if (NULL != pResource)
+			m_pRenderTargetView = pRenderTargetView;
+			if (NULL != pOutputResource)
 			{
-				pResource->Release();
+				pOutputResource->Release();
 			}
 
 			return hr;

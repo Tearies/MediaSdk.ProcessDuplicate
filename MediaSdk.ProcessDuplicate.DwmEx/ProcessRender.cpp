@@ -14,6 +14,7 @@ namespace MediaSdk
 			imageSource(nullptr),
 			duplicate_manager(nullptr)
 		{
+			
 			Loaded += gcnew RoutedEventHandler(this, &ProcessRender::OnLoaded);
 
 		}
@@ -54,6 +55,7 @@ namespace MediaSdk
 
 void ProcessRender::OnLoaded(Object^ sender, RoutedEventArgs^ e)
 {
+	cCube = gcnew CCube();
 	duplicate_manager = gcnew ProcessDuplicateManager();
 	const auto control = gcnew Image();
 	this->Child = control;
@@ -71,6 +73,7 @@ void ProcessRender::OnLoaded(Object^ sender, RoutedEventArgs^ e)
 		config->Application = this->Cube;
 		control->Source = config->ImageSource;
 		ResizeSurface();
+		config->ImageSource->RequestRender();
 		duplicate_manager->Start(config);
 	}
 }
