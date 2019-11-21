@@ -9,7 +9,7 @@ namespace MediaSdk
 		/**
 		 * \brief 多媒体时钟间隔
 		 */
-		const UInt16 MediaTimerInterval = 0x21U;
+		const UInt16 MediaTimerInterval = 0x21U; //33U
 
 		public ref class MediaContext : IDisposable
 		{
