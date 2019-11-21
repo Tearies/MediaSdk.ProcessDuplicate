@@ -1,13 +1,15 @@
 #pragma once
-#include "ProcessRender.h"
+
 #include "CCube.h"
+#include "D3D11Image.h"
+using namespace System;
 using namespace MediaSdk::DxRender;
 using namespace MediaSdk::Controls;
 namespace MediaSdk
 {
 	namespace Common
 	{
-		public ref class ProcessConfiguration
+		public ref class ProcessConfiguration :public Object
 		{
 		private:
 			String^ appPath;

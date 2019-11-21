@@ -27,7 +27,6 @@ namespace MediaSdk
 				config->ImageSource = cc;
 				config->Application = this->Cube;
 				control->Source = config->ImageSource;
-				config->ImageSource->
 				//duplicate_manager->Start(config);
 			}
 		}

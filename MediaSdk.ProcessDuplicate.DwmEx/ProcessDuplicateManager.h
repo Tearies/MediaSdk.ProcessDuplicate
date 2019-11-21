@@ -1,9 +1,7 @@
 #pragma once
 #include "DwmEx.h"
 #include "MediaClock.h"
-#include "RenderTarget.h"
 #include "D3D11Image.h"
-#include "ProcessRender.h"
 #include "ProcessConfiguration.h"
 
 using namespace MediaSdk::DwmEx;
