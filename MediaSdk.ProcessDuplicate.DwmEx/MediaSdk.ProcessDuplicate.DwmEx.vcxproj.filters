@@ -51,9 +51,6 @@
     <ClInclude Include="Util.h">
       <Filter>Header Files\Common</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTarget.h">
-      <Filter>Header Files\Common</Filter>
-    </ClInclude>
     <ClInclude Include="D3D11Image.h">
       <Filter>Header Files\Control</Filter>
     </ClInclude>
@@ -93,9 +90,6 @@
       <Filter>Source Files\Common</Filter>
     </ClCompile>
     <ClCompile Include="Util.cpp">
-      <Filter>Source Files\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderTarget.cpp">
       <Filter>Source Files\Common</Filter>
     </ClCompile>
     <ClCompile Include="D3D11Image.cpp">

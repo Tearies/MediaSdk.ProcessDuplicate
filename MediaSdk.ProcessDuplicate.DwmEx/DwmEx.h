@@ -25,7 +25,7 @@ namespace MediaSdk
 			{
 				ID3D11Texture2D* get()
 				{
-					return this->copyResource;
+					return this->pSharedTexture;
 				}
 			}
 			/**

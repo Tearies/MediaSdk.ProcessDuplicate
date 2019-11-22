@@ -127,7 +127,6 @@
     <ClInclude Include="ProcessConfiguration.h" />
     <ClInclude Include="ProcessDuplicateManager.h" />
     <ClInclude Include="ProcessRender.h" />
-    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SurfaceQueue.h" />
     <ClInclude Include="SurfaceQueueImpl.h" />
@@ -149,7 +148,6 @@
     <ClCompile Include="ProcessConfiguration.cpp" />
     <ClCompile Include="ProcessDuplicateManager.cpp" />
     <ClCompile Include="ProcessRender.cpp" />
-    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="SurfaceDevice10.cpp" />
     <ClCompile Include="SurfaceDevice11.cpp" />
     <ClCompile Include="SurfaceDevice9.cpp" />

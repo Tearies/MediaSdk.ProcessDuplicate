@@ -54,8 +54,6 @@ namespace MediaSdk
 			m_featureLevel = D3D_FEATURE_LEVEL_11_0;
 			m_pd3dDevice = NULL;
 			m_pImmediateContext = NULL;
-			m_pVertexLayout = NULL;
-			m_pVertexBuffer = NULL;
 			this->InitDevice();
 		}
 
@@ -73,11 +71,11 @@ namespace MediaSdk
 				}
 			}
 
-			float ClearColor[4] = { RandFloat(), RandFloat(), RandFloat(), 1.0f };
+			float ClearColor[4] = {0.2, 0.2, 0.2, 1.0f };
 			m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
 
-
-
+			 
+			 
 			if (NULL != m_pImmediateContext)
 			{
 				m_pImmediateContext->Flush();
