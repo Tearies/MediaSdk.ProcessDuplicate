@@ -18,7 +18,7 @@ namespace MediaSdk
 			ID3D11DeviceContext* m_pImmediateContext;
 			IDXGISwapChain* m_pSwapChain = NULL;
 			ID3D11RenderTargetView* m_pRenderTargetView = NULL;
-			ID3D11Texture2D* backBufffer;  
+			D3D11_MAPPED_SUBRESOURCE* backBufffer;
 			ID3D11Texture2D* outputBufffer;
 			void InitDevice(); 
 		public: 
@@ -26,13 +26,13 @@ namespace MediaSdk
 			HRESULT Render(void* pResource, bool isNewSurface);
 			HRESULT InitRenderTarget(void* pResource);
 			void SetUpViewport();
-			property ID3D11Texture2D* BackBuffer
+			property D3D11_MAPPED_SUBRESOURCE* BackBuffer
 			{
-				ID3D11Texture2D* get()
+				D3D11_MAPPED_SUBRESOURCE* get()
 				{
 					return backBufffer;
 				}
-				void set(ID3D11Texture2D* buffer)
+				void set(D3D11_MAPPED_SUBRESOURCE* buffer)
 				{
 					backBufffer = buffer;
 				}

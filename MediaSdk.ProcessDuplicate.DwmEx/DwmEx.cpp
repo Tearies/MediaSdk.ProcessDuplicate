@@ -7,8 +7,8 @@ DwmExManager::DwmExManager() :
 	DwmGetDxSharedSurface(nullptr),
 	m_pDevice(nullptr),
 	m_pDeviceContext(nullptr),
-	m_descFrame(nullptr)
-
+	m_descFrame(nullptr),
+	pSharedTexture(nullptr)
 {
 }
 
@@ -17,7 +17,10 @@ void DwmExManager::CopySource()
 {
 	try
 	{
-		m_pDeviceContext->CopyResource(copyResource, pSharedTexture);
+		D3D11_MAPPED_SUBRESOURCE mapped = { 0, };
+		m_pDeviceContext->Map(pSharedTexture, 0, D3D11_MAP_READ, 0, &mapped);
+		backBuffer = &mapped;
+		m_pDeviceContext->Unmap(pSharedTexture,0);
 	}
 	catch (Exception^ e)
 	{
@@ -68,9 +71,9 @@ void DwmExManager::Initialize(HWND targetWindow)
 	{
 		return;
 	}
-	pSharedTexture = tpSharedTexture;
+	 
 	D3D11_TEXTURE2D_DESC desc = {0,};
-	pSharedTexture->GetDesc(&desc);
+	tpSharedTexture->GetDesc(&desc);
 	D3D11_TEXTURE2D_DESC _descFrame = {0,};
 	_descFrame.Width = desc.Width;
 	_descFrame.Height = desc.Height;
@@ -86,5 +89,6 @@ void DwmExManager::Initialize(HWND targetWindow)
 	m_descFrame = &_descFrame;
 	ID3D11Texture2D* tmpcopyResource;
 	m_pDevice->CreateTexture2D(m_descFrame, nullptr, &tmpcopyResource);
-	copyResource = tmpcopyResource;
+	pSharedTexture = tmpcopyResource;
+	
 }

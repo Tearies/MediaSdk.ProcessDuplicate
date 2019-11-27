@@ -16,18 +16,17 @@ namespace MediaSdk
 			ID3D11DeviceContext* m_pDeviceContext;
 			D3D11_TEXTURE2D_DESC* m_descFrame;
 			ID3D11Texture2D* pSharedTexture;
-			ID3D11Texture2D* copyResource;
-
-
+			D3D11_MAPPED_SUBRESOURCE* backBuffer;
 		public:
 
-			property ID3D11Texture2D* SharedResource
+			property D3D11_MAPPED_SUBRESOURCE* BackBuffer
 			{
-				ID3D11Texture2D* get()
+				D3D11_MAPPED_SUBRESOURCE* get()
 				{
-					return this->pSharedTexture;
+					return backBuffer;
 				}
 			}
+		 
 			/**
 			 * \brief 
 			 */

@@ -16,7 +16,7 @@ void ProcessDuplicateManager::OnClockTick(Object^ sender, EventArgs^ args)
 void ProcessDuplicateManager::DoRender()
 {
 	dwm_ex_manager->CopySource();
-	process_configuration->Application->BackBuffer = dwm_ex_manager->SharedResource;
+	process_configuration->Application->BackBuffer = dwm_ex_manager->BackBuffer;
 	process_configuration->ImageSource->RequestRender();
 }
 
