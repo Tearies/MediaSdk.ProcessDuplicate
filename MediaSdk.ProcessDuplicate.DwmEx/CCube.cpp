@@ -76,12 +76,15 @@ namespace MediaSdk
 			float ClearColor[4] = {0.2, 0.2, 0.2, 1.0f };
 			m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
 
-			
-			 
-			if (NULL != m_pImmediateContext)
+			if(nullptr!=BackBuffer && nullptr!=BackBuffer->pData)
 			{
+				ID3D11Resource* resource;
+				m_pRenderTargetView->GetResource(&resource);
+				m_pImmediateContext->UpdateSubresource(resource, 0, NULL, BackBuffer->pData, BackBuffer->DepthPitch, BackBuffer->RowPitch);
+				resource->Release();
 				m_pImmediateContext->Flush();
 			}
+		 
 			return hr;
 		}
 

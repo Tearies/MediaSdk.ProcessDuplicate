@@ -40,6 +40,7 @@ void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
 	process_configuration = configuration;
 	targetProcess = Process::Start(process_configuration->AppPath);
 	targetProcess->WaitForInputIdle();
+	Thread::Sleep(1000);
 	dwm_ex_manager->Initialize(reinterpret_cast<HWND>(targetProcess->MainWindowHandle.ToInt32()));
 	media_context->ClockTick += gcnew System::EventHandler(this, &ProcessDuplicateManager::OnClockTick);
 	media_context->Start();

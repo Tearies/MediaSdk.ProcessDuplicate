@@ -8,7 +8,7 @@ DwmExManager::DwmExManager() :
 	m_pDevice(nullptr),
 	m_pDeviceContext(nullptr),
 	m_descFrame(new D3D11_TEXTURE2D_DESC()),
-	pSharedTexture(nullptr)
+	pSharedTexture(nullptr) 
 {
 	CoInitializeEx(nullptr, COINITBASE_MULTITHREADED | COINIT_DISABLE_OLE1DDE);
 }
@@ -23,13 +23,12 @@ void DwmExManager::CopySource()
 		ID3D11Texture2D* pSharedTexture = nullptr;
 		hr = m_pDevice->OpenSharedResource(targetShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
 		m_pDeviceContext->CopyResource(pFrameCopy, pSharedTexture);
- 
-		auto fileName = TEXT("D:\\Render\\") + ::GetTickCount64() + TEXT(".bmp");
-		Util::SaveTextureToBmp(fileName, pFrameCopy);
- 
-		 
-		pFrameCopy->Release();
-		pSharedTexture->Release();
+		D3D11_MAPPED_SUBRESOURCE tempsubsource;
+		m_pDeviceContext->Map(pFrameCopy, 0, D3D11_MAP_READ, 0, &tempsubsource);
+		m_pDeviceContext->Unmap(pFrameCopy, 0);
+		backBuffer = &tempsubsource;
+
+
 	}
 	catch (Exception ^ e)
 	{
