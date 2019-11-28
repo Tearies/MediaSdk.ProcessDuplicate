@@ -1,9 +1,11 @@
 #include "pch.h"
 #include "CCube.h"
+#include "Util.h"
 
-
+ 
 namespace MediaSdk
 {
+
 	namespace DxRender
 	{
 		void CCube::InitDevice()
@@ -74,7 +76,7 @@ namespace MediaSdk
 			float ClearColor[4] = {0.2, 0.2, 0.2, 1.0f };
 			m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
 
-			 
+			
 			 
 			if (NULL != m_pImmediateContext)
 			{

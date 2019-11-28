@@ -82,7 +82,7 @@
       <PreprocessorDefinitions>NDEBUG;QUEUE_USE_CONFORMANT_NEW;</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d11.lib;kernel32.lib;user32.lib;dxgi.lib;d3d9.lib;d3d10_1.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;kernel32.lib;user32.lib;dxgi.lib;d3d9.lib;d3d10_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -93,7 +93,7 @@
       <PreprocessorDefinitions>NDEBUG;QUEUE_USE_CONFORMANT_NEW;</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d11.lib;kernel32.lib;user32.lib;dxgi.lib;d3d9.lib;d3d10_1.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;kernel32.lib;user32.lib;dxgi.lib;d3d9.lib;d3d10_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -104,7 +104,7 @@
       <PreprocessorDefinitions>NDEBUG;QUEUE_USE_CONFORMANT_NEW;</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d11.lib;kernel32.lib;user32.lib;dxgi.lib;d3d9.lib;d3d10_1.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;kernel32.lib;user32.lib;dxgi.lib;d3d9.lib;d3d10_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -115,7 +115,7 @@
       <PreprocessorDefinitions>NDEBUG;QUEUE_USE_CONFORMANT_NEW;</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d11.lib;kernel32.lib;user32.lib;dxgi.lib;d3d9.lib;d3d10_1.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;kernel32.lib;user32.lib;dxgi.lib;d3d9.lib;d3d10_1.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

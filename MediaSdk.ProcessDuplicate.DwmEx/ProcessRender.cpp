@@ -61,7 +61,7 @@ void ProcessRender::OnLoaded(Object^ sender, RoutedEventArgs^ e)
 	this->Child = control;
 	ProcessConfiguration^ config = gcnew ProcessConfiguration();
 
-	config->AppPath = "wordpad.exe";
+	config->AppPath = "D:\\支持\\冀北\\日志+沙盘\\NinthLayer1112\\NinthLayer_New.exe";
 	if (!DesignerProperties::GetIsInDesignMode(this))
 	{
 		this->imageSource = gcnew D3D11Image();
