@@ -79,8 +79,15 @@ namespace MediaSdk
 			if(nullptr!=BackBuffer && nullptr!=BackBuffer->pData)
 			{
 				ID3D11Resource* resource;
+				D3D11_BOX sourceRegion;
+				sourceRegion.left = 0;
+				sourceRegion.right = m_Width;
+				sourceRegion.top = 0;
+				sourceRegion.bottom = m_Height;
+				sourceRegion.front = 0;
+				sourceRegion.back = 1;
 				m_pRenderTargetView->GetResource(&resource);
-				m_pImmediateContext->UpdateSubresource(resource, 0, NULL, BackBuffer->pData, BackBuffer->DepthPitch, BackBuffer->RowPitch);
+				m_pImmediateContext->UpdateSubresource(resource, 0, &sourceRegion, BackBuffer->pData, BackBuffer->RowPitch, BackBuffer->DepthPitch);
 				resource->Release();
 				m_pImmediateContext->Flush();
 			}
