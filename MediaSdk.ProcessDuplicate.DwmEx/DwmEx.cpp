@@ -26,7 +26,8 @@ void DwmExManager::CopySource()
 		auto fileName = TEXT("D:\\Render\\") + ::GetTickCount64() + TEXT(".bmp");
 		Util::SaveTextureToBmp(fileName, pFrameCopy);
 		m_pDeviceContext->Unmap(pSharedTexture, 0);
-
+		pFrameCopy->Release();
+		pSharedTexture->Release();
 	}
 	catch (Exception ^ e)
 	{
