@@ -23,9 +23,11 @@ void DwmExManager::CopySource()
 		ID3D11Texture2D* pSharedTexture = nullptr;
 		hr = m_pDevice->OpenSharedResource(targetShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
 		m_pDeviceContext->CopyResource(pFrameCopy, pSharedTexture);
+#if DEBUG
 		auto fileName = TEXT("D:\\Render\\") + ::GetTickCount64() + TEXT(".bmp");
 		Util::SaveTextureToBmp(fileName, pFrameCopy);
-		m_pDeviceContext->Unmap(pSharedTexture, 0);
+#endif
+		 
 		pFrameCopy->Release();
 		pSharedTexture->Release();
 	}
