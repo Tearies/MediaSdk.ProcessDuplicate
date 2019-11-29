@@ -2,7 +2,7 @@
 #include "CCube.h"
 #include "Util.h"
 
- 
+
 namespace MediaSdk
 {
 
@@ -72,26 +72,25 @@ namespace MediaSdk
 					return hr;
 				}
 			}
+			ID3D11Texture2D* pFrameCopy = nullptr;
+		    hr = Manager->Device->CreateTexture2D(Manager->TEXTURE2D_DESC, nullptr, &pFrameCopy);
+			ID3D11Texture2D* pSharedTexture = nullptr;
+			hr = Manager->Device->OpenSharedResource(Manager->ShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
+			Manager->DeviceContext->CopyResource(pFrameCopy, pSharedTexture);
+			D3D11_MAPPED_SUBRESOURCE tempsubsource;
+			Manager->DeviceContext->Map(pFrameCopy, 0, D3D11_MAP_READ, 0, &tempsubsource);
+			Manager->DeviceContext->Unmap(pFrameCopy, 0);
+			 
 
-			float ClearColor[4] = {0.2, 0.2, 0.2, 1.0f };
+			float ClearColor[4] = { 0.2, 0.2, 0.2, 1.0f };
 			m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
-
-			if(nullptr!=BackBuffer && nullptr!=BackBuffer->pData)
-			{
-				ID3D11Resource* resource;
-				D3D11_BOX sourceRegion;
-				sourceRegion.left = 0;
-				sourceRegion.right = m_Width;
-				sourceRegion.top = 0;
-				sourceRegion.bottom = m_Height;
-				sourceRegion.front = 0;
-				sourceRegion.back = 1;
-				m_pRenderTargetView->GetResource(&resource);
-				m_pImmediateContext->UpdateSubresource(resource, 0, &sourceRegion, BackBuffer->pData, BackBuffer->RowPitch, BackBuffer->DepthPitch);
-				resource->Release();
+			ID3D11Resource* resource;
+			m_pRenderTargetView->GetResource(&resource);
+			m_pImmediateContext->UpdateSubresource(resource, 0, 0, tempsubsource.pData, tempsubsource.RowPitch, tempsubsource.DepthPitch);
+			resource->Release();
+			 
+			if (nullptr != m_pImmediateContext)
 				m_pImmediateContext->Flush();
-			}
-		 
 			return hr;
 		}
 

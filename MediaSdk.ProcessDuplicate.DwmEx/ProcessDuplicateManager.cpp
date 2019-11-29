@@ -15,12 +15,10 @@ void ProcessDuplicateManager::OnClockTick(Object^ sender, EventArgs^ args)
 
 void ProcessDuplicateManager::DoRender()
 {
-	dwm_ex_manager->CopySource();
-	process_configuration->Application->BackBuffer = dwm_ex_manager->BackBuffer;
-	process_configuration->ImageSource->RequestRender();
+	 process_configuration->ImageSource->RequestRender();
 }
 
-ProcessDuplicateManager::ProcessDuplicateManager() :
+ProcessDuplicateManager::ProcessDuplicateManager():
 	dwm_ex_manager(gcnew DwmExManager()),
 	media_context(gcnew MediaContext()),
 	currentUIDistpatcher(Application::Current->Dispatcher)
@@ -42,6 +40,8 @@ void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
 	targetProcess->WaitForInputIdle();
 	Thread::Sleep(1000);
 	dwm_ex_manager->Initialize(reinterpret_cast<HWND>(targetProcess->MainWindowHandle.ToInt32()));
+	process_configuration->Application->Manager = dwm_ex_manager;
+	process_configuration->ImageSource->SetPixelSize(dwm_ex_manager->TEXTURE2D_DESC->Width, dwm_ex_manager->TEXTURE2D_DESC->Height);
 	media_context->ClockTick += gcnew System::EventHandler(this, &ProcessDuplicateManager::OnClockTick);
 	media_context->Start();
 }

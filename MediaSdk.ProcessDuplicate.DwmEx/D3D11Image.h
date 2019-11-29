@@ -1,10 +1,12 @@
 #pragma once
 #include "SurfaceQueueInteropHelper.h"
+#include "DwmEx.h"
 using namespace System;
 using namespace System::Windows::Interop;
 using namespace System::Windows;
 namespace MediaSdk
 {
+	using namespace DwmEx;
 	namespace Controls
 	{
 		public ref class D3D11Image : public D3DImage
@@ -15,9 +17,10 @@ namespace MediaSdk
 			void EnsureHelper();
 			static D3D11Image();
 			SurfaceQueueInteropHelper^ helper;
+			
 		protected:
 			Freezable^ CreateInstanceCore() override;
-
+ 
 		public:
 			D3D11Image();
 			~D3D11Image();
@@ -62,7 +65,8 @@ namespace MediaSdk
 					SetValue(WindowOwnerProperty, value);
 				}
 			}
-
+			 
+			
 			/// The RequestRender method signals that the D3D11Image should get the DirectX rendering code to render a new frame to the provided surface.
 			/// Typically the user of the D3D11Image calls this every time the CompositionTarget.Rendering event fires.
 			void RequestRender();

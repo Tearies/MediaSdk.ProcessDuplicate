@@ -14,7 +14,7 @@ namespace MediaSdk
 			imageSource(nullptr),
 			duplicate_manager(nullptr)
 		{
-			
+
 			Loaded += gcnew RoutedEventHandler(this, &ProcessRender::OnLoaded);
 
 		}
@@ -27,22 +27,22 @@ namespace MediaSdk
 
 		void ProcessRender::ResizeSurface()
 		{
-			if (!this->IsLoaded)
-				return;
-			double dpiScale = 1.0;
-			auto hwndTarget = static_cast<HwndTarget^>(PresentationSource::FromVisual(this)->CompositionTarget);
-			if (hwndTarget != nullptr)
-			{
-				dpiScale = hwndTarget->TransformToDevice.M11;
-			}
-			int surfWidth = (int)(this->ActualWidth < 0 ? 0 : Math::Ceiling(this->ActualWidth * dpiScale));
-			int surfHeight = (int)(this->ActualHeight < 0 ? 0 : Math::Ceiling(this->ActualHeight * dpiScale));
-			this->imageSource->SetPixelSize(surfWidth, surfHeight);
+			/*	if (!this->IsLoaded)
+					return;
+				double dpiScale = 1.0;
+				auto hwndTarget = static_cast<HwndTarget^>(PresentationSource::FromVisual(this)->CompositionTarget);
+				if (hwndTarget != nullptr)
+				{
+					dpiScale = hwndTarget->TransformToDevice.M11;
+				}
+				int surfWidth = (int)(this->ActualWidth < 0 ? 0 : Math::Ceiling(this->ActualWidth * dpiScale));
+				int surfHeight = (int)(this->ActualHeight < 0 ? 0 : Math::Ceiling(this->ActualHeight * dpiScale));
+				this->imageSource->SetPixelSize(surfWidth, surfHeight);*/
 		}
 
 		void ProcessRender::OnRenderSizeChanged(SizeChangedInfo^ info)
 		{
-			ResizeSurface();
+
 		}
 
 		void ProcessRender::DoRender(IntPtr surface, bool isNewSurface)
@@ -58,11 +58,12 @@ void ProcessRender::OnLoaded(Object^ sender, RoutedEventArgs^ e)
 	cCube = gcnew CCube();
 	duplicate_manager = gcnew ProcessDuplicateManager();
 	const auto control = gcnew Image();
+	control->Stretch = Stretch::UniformToFill;
 	this->Child = control;
 	ProcessConfiguration^ config = gcnew ProcessConfiguration();
 
-	//config->AppPath = "D:\\支持\\冀北\\日志+沙盘\\NinthLayer1112\\NinthLayer_New.exe";
-	config->AppPath = "wordpad.exe";
+	config->AppPath = "D:\\支持\\冀北\\日志+沙盘\\NinthLayer1112\\NinthLayer_New.exe";
+	//config->AppPath = "notepad";
 	if (!DesignerProperties::GetIsInDesignMode(this))
 	{
 		this->imageSource = gcnew D3D11Image();
