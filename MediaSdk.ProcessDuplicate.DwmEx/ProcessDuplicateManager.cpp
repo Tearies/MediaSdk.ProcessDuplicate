@@ -9,7 +9,7 @@ using namespace MediaSdk::Common;
 void ProcessDuplicateManager::OnClockTick(Object^ sender, EventArgs^ args)
 {
 	Action^ action = gcnew Action(this, &ProcessDuplicateManager::DoRender);
-	currentUIDistpatcher->BeginInvoke(DispatcherPriority::Normal,
+	currentUIDistpatcher->Invoke(DispatcherPriority::Normal,
 		action);
 }
 

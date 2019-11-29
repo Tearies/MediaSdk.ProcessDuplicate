@@ -58,7 +58,7 @@ void ProcessRender::OnLoaded(Object^ sender, RoutedEventArgs^ e)
 	cCube = gcnew CCube();
 	duplicate_manager = gcnew ProcessDuplicateManager();
 	const auto control = gcnew Image();
-	control->Stretch = Stretch::UniformToFill;
+	control->Stretch = Stretch::Fill;
 	this->Child = control;
 	ProcessConfiguration^ config = gcnew ProcessConfiguration();
 
