@@ -87,7 +87,6 @@ namespace MediaSdk
 			Manager->DeviceContext->Unmap(pFrameCopy, 0);
 			resource->Release();
 			pFrameCopy->Release();
-		
 			if (nullptr != m_pImmediateContext)
 				m_pImmediateContext->Flush();
 			return hr;
