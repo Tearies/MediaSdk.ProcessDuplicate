@@ -79,16 +79,15 @@ namespace MediaSdk
 			Manager->DeviceContext->CopyResource(pFrameCopy, pSharedTexture);
 			D3D11_MAPPED_SUBRESOURCE tempsubsource;
 			Manager->DeviceContext->Map(pFrameCopy, 0, D3D11_MAP_READ, 0, &tempsubsource);
-			Manager->DeviceContext->Unmap(pFrameCopy, 0);
-			 
-
 			float ClearColor[4] = { 0.2, 0.2, 0.2, 1.0f };
 			m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
 			ID3D11Resource* resource;
 			m_pRenderTargetView->GetResource(&resource);
 			m_pImmediateContext->UpdateSubresource(resource, 0, 0, tempsubsource.pData, tempsubsource.RowPitch, tempsubsource.DepthPitch);
+			Manager->DeviceContext->Unmap(pFrameCopy, 0);
 			resource->Release();
-			 
+			pFrameCopy->Release();
+		
 			if (nullptr != m_pImmediateContext)
 				m_pImmediateContext->Flush();
 			return hr;
