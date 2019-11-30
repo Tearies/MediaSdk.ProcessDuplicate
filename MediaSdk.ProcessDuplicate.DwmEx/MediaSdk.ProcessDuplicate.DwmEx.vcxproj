@@ -132,6 +132,7 @@
     <ClInclude Include="SurfaceQueueImpl.h" />
     <ClInclude Include="SurfaceQueueInteropHelper.h" />
     <ClInclude Include="Util.h" />
+    <ClInclude Include="WindowMessageInject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
@@ -154,6 +155,7 @@
     <ClCompile Include="SurfaceQueue.cpp" />
     <ClCompile Include="SurfaceQueueInteropHelper.cpp" />
     <ClCompile Include="Util.cpp" />
+    <ClCompile Include="WindowMessageInject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
