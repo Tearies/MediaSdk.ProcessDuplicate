@@ -1,6 +1,7 @@
 #pragma once
 #include "Util.h"
 #include "WindowMessageInject.h"
+#include "MessageWindow.h"
 using namespace System;
 using namespace MediaSdk::ProcessDuplicate::Common;
 
@@ -17,7 +18,9 @@ namespace MediaSdk
 			ID3D11DeviceContext* m_pDeviceContext;
 			D3D11_TEXTURE2D_DESC* m_texture_2d_desc;
 			ID3D11Texture2D* pSharedTexture;
-			WindowMessageInject^ messageInject;
+			WindowMessageInject* messageInject;
+			MessageWindow^ messageWindow;
+
 		public:
 
 			property D3D11_TEXTURE2D_DESC* TEXTURE2D_DESC
@@ -27,11 +30,11 @@ namespace MediaSdk
 					return m_texture_2d_desc;
 				}
 			}
-			property WindowMessageInject^ MessageInject
+			property WindowMessageInject MessageInject
 			{
-				WindowMessageInject^ get()
+				WindowMessageInject get()
 				{
-					return messageInject;
+					return *messageInject;
 				}
 			}
 			property ID3D11Device* Device

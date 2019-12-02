@@ -123,6 +123,7 @@
     <ClInclude Include="D3D11Image.h" />
     <ClInclude Include="DwmEx.h" />
     <ClInclude Include="MediaClock.h" />
+    <ClInclude Include="MessageWindow.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ProcessConfiguration.h" />
     <ClInclude Include="ProcessDuplicateManager.h" />
@@ -140,6 +141,7 @@
     <ClCompile Include="D3D11Image.cpp" />
     <ClCompile Include="DwmEx.cpp" />
     <ClCompile Include="MediaClock.cpp" />
+    <ClCompile Include="MessageWindow.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -169,6 +171,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />

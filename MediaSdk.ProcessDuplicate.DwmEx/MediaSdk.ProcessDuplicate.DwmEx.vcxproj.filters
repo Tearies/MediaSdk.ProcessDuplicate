@@ -75,6 +75,9 @@
     <ClInclude Include="WindowMessageInject.h">
       <Filter>Header Files\Common</Filter>
     </ClInclude>
+    <ClInclude Include="MessageWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -124,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="WindowMessageInject.cpp">
       <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageWindow.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

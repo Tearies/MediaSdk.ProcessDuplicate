@@ -6,6 +6,14 @@
 
 #ifndef PCH_H
 #define PCH_H
-
-
+#include <windows.h>
+typedef class BROADCAST_MESSAGE
+{
+public:
+	INT32 ProcessID;
+	INT32 MSG;
+	WPARAM ReleativeWParam;
+	LPARAM ReleativeLParam;
+} 	BROADCAST_MESSAGE;
 #endif //PCH_H
+

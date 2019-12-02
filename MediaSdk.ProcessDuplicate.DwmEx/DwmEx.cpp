@@ -9,7 +9,8 @@ DwmExManager::DwmExManager() :
 	m_pDeviceContext(nullptr),
 	m_texture_2d_desc(new D3D11_TEXTURE2D_DESC()),
 	pSharedTexture(nullptr),
-	messageInject(gcnew WindowMessageInject())
+	messageInject(new WindowMessageInject()),
+	messageWindow(gcnew MessageWindow())
 {
 	CoInitializeEx(nullptr, COINITBASE_MULTITHREADED | COINIT_DISABLE_OLE1DDE);
 }
@@ -43,7 +44,6 @@ void DwmExManager::Initialize(HWND targetWindow)
 	DwmGetDxSharedSurface = Util::LoadWinAPILibraryAs<PFDwmGetDxSharedSurface>("user32.dll", "DwmGetDxSharedSurface");
 	if (DwmGetDxSharedSurface == nullptr)
 	{
-
 		return;
 	}
 	LUID adapterLuid = { 0, };
@@ -89,6 +89,6 @@ void DwmExManager::Initialize(HWND targetWindow)
 	m_texture_2d_desc->MipLevels = 1;
 	m_texture_2d_desc->CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ;
 	m_texture_2d_desc->Usage = D3D11_USAGE::D3D11_USAGE_STAGING;
-	
-	
+
+
 }

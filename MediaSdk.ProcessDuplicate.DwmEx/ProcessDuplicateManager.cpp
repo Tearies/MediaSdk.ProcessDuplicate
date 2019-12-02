@@ -39,9 +39,6 @@ void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
 	targetProcess = Process::Start(process_configuration->AppPath);
 	targetProcess->WaitForInputIdle();
 	Thread::Sleep(1000);
-
-	 
-	
 	dwm_ex_manager->Initialize(reinterpret_cast<HWND>(targetProcess->MainWindowHandle.ToInt32()));
 	process_configuration->Application->Manager = dwm_ex_manager;
 	process_configuration->ImageSource->SetPixelSize(dwm_ex_manager->TEXTURE2D_DESC->Width, dwm_ex_manager->TEXTURE2D_DESC->Height);
