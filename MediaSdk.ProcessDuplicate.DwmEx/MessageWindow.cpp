@@ -1,36 +1,26 @@
 #include "pch.h"
 #include "MessageWindow.h"
- 
 
+
+void MessageWindow::OnTargetSizeChanged()
+{
+	this->TargetSizeChanged(this, System::EventArgs::Empty);
+}
 
 MessageWindow::MessageWindow()
 {
-	MessageID = ::RegisterWindowMessageA("MediaSdk.ProcessDuplicate_BROADCAST_MESSAGE");
+	this->CreateHandle(gcnew System::Windows::Forms::CreateParams);
 }
-
- 
 
 void MessageWindow::WndProc(System::Windows::Forms::Message% m)
 {
-	if(m.Msg==MessageID)
+	System::Console::WriteLine(m.Msg);
+	switch (m.Msg)
 	{
-		try
-		{
-		/*	auto message = Marshal::PtrToStructure<BROADCAST_MESSAGE>(m.WParam);
-			if (message.ProcessID != 0)
-			{
-				System::Windows::Forms::MessageBox::Show(message.ProcessID.ToString());
-			}*/
-
-		}
-		catch (System::Exception ^ e)
-		{
-
-		}
-
-		
+	case WM_ACTIVATEAPP:
+		this->OnTargetSizeChanged();
+		break;
 	}
-	
+	NativeWindow::WndProc(m);
 }
 
- 

@@ -6,7 +6,9 @@
 
 #ifndef PCH_H
 #define PCH_H
-#include <windows.h>
+#include <windows.h> 
+#define RemottingSharedHandle "VBI.Media.Shared.HostHwnd"
+
 typedef class BROADCAST_MESSAGE
 {
 public:

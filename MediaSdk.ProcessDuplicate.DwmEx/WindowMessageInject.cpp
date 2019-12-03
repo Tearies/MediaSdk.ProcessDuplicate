@@ -24,14 +24,17 @@ namespace MediaSdk
 				return reinterpret_cast<WPARAM>(&broadcast_message);
 			}
 
-			LRESULT  WindowMessageInject::MessageProcess(int Code, WPARAM wParam, LPARAM lParam)
+			LRESULT  WindowMessageInject::MessageProcess(const int Code, WPARAM wParam, LPARAM lParam)
 			{
-				//System::Windows::Forms::MessageBox::Show(((int)::GetCurrentProcessId()).ToString());
-				//BuildWParam(Code, wParam, lParam)
-				::SendNotifyMessageA(HWND_BROADCAST, BROADCAST_Message,0 , 0);
-				return CallNextHookEx(NULL, Code, wParam, lParam);
+				auto remotingHandle= Environment::GetEnvironmentVariable(RemottingSharedHandle);
+				int temp;
+				if(int::TryParse(remotingHandle,temp))
+				{
+					//System::Windows::Forms::MessageBox::Show(Code.ToString());
+					::SendMessageA((HWND)temp, Code, wParam, lParam);
+				}
+				return CallNextHookEx(NULL,Code,wParam,lParam);
 			}
-		
 
 			void WindowMessageInject::Start()
 			{
@@ -41,7 +44,7 @@ namespace MediaSdk
 				threadID = GetWindowThreadProcessId(this->TargetHandle, &processID);
 				this->ProcessID = processID;
 				this->ThreadID = threadID;
-				Hook = SetWindowsHookExA(WH_CALLWNDPROCRET, pointer_cast<HOOKPROC>(&WindowMessageInject::MessageProcess), GetModuleHandleA("MediaSdk.ProcessDuplicate.DwmEx.dll"), threadID);
+				Hook = SetWindowsHookExA(WH_MSGFILTER, pointer_cast<HOOKPROC>(&WindowMessageInject::MessageProcess), GetModuleHandleA("MediaSdk.ProcessDuplicate.DwmEx.dll"), threadID);
 				DWORD error = GetLastError();
 				HRESULT hr = HRESULT_FROM_WIN32(error);
 			}

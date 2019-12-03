@@ -43,11 +43,20 @@ namespace MediaSdk
 			 * @brief 目标进程
 			 */
 			Process^ targetProcess;
-
+			/*
+			 * @brief 本地消息窗口
+			 */
+			MessageWindow^ messageWindow;
 		public:
 			ProcessDuplicateManager();
 			~ProcessDuplicateManager();
-
+			property IntPtr^ RemottingHandle
+			{
+				IntPtr^ get()
+				{
+					return messageWindow->Handle;
+				}
+			}
 			void DoRender();
 			/**
 			 * @brief 开始进程镜像复制 \n
@@ -58,6 +67,7 @@ namespace MediaSdk
 			 * @brief 结束镜像复制,此操作会关闭进程
 			 */
 			void End();
+			void OnTargetSizeChanged(System::Object^ sender, System::EventArgs^ e);
 		};
 	}
 }

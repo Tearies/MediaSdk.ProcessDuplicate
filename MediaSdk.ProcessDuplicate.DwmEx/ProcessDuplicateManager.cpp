@@ -23,6 +23,8 @@ ProcessDuplicateManager::ProcessDuplicateManager():
 	media_context(gcnew MediaContext()),
 	currentUIDistpatcher(Application::Current->Dispatcher)
 {
+	messageWindow = gcnew  MessageWindow();
+	messageWindow->TargetSizeChanged += gcnew System::EventHandler<System::EventArgs^>(this, &MediaSdk::Common::ProcessDuplicateManager::OnTargetSizeChanged);
 }
 
 ProcessDuplicateManager::~ProcessDuplicateManager()
@@ -36,7 +38,11 @@ ProcessDuplicateManager::~ProcessDuplicateManager()
 void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
 {
 	process_configuration = configuration;
-	targetProcess = Process::Start(process_configuration->AppPath);
+	ProcessStartInfo^ startInfo = gcnew ProcessStartInfo();
+	startInfo->FileName = configuration->AppPath;
+	startInfo->Environment->Add(RemottingSharedHandle, this->RemottingHandle->ToInt32().ToString());
+	startInfo->UseShellExecute = false;
+	targetProcess = Process::Start(startInfo);
 	targetProcess->WaitForInputIdle();
 	Thread::Sleep(1000);
 	dwm_ex_manager->Initialize(reinterpret_cast<HWND>(targetProcess->MainWindowHandle.ToInt32()));
@@ -49,4 +55,11 @@ void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
 void ProcessDuplicateManager::End()
 {
 	targetProcess->Kill();
+}
+
+
+void ProcessDuplicateManager::OnTargetSizeChanged(System::Object^ sender, System::EventArgs^ e)
+{
+	dwm_ex_manager->InternalInitailize();
+	process_configuration->ImageSource->SetPixelSize(dwm_ex_manager->TEXTURE2D_DESC->Width, dwm_ex_manager->TEXTURE2D_DESC->Height);
 }

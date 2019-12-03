@@ -19,7 +19,7 @@ namespace MediaSdk
 			D3D11_TEXTURE2D_DESC* m_texture_2d_desc;
 			ID3D11Texture2D* pSharedTexture;
 			WindowMessageInject* messageInject;
-			MessageWindow^ messageWindow;
+			
 
 		public:
 
@@ -59,12 +59,16 @@ namespace MediaSdk
 					return m_pDeviceContext;
 				}
 			}
+
+			
 			/**
 			 * \brief 
 			 */
 			DwmExManager();
 			void CopySource();
+			bool InternalInitailize();
 			void Initialize(HWND targetWindow);
+			 
 		};
 	}
 }

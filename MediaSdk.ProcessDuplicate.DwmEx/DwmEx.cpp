@@ -9,9 +9,9 @@ DwmExManager::DwmExManager() :
 	m_pDeviceContext(nullptr),
 	m_texture_2d_desc(new D3D11_TEXTURE2D_DESC()),
 	pSharedTexture(nullptr),
-	messageInject(new WindowMessageInject()),
-	messageWindow(gcnew MessageWindow())
+	messageInject(new WindowMessageInject())
 {
+	
 	CoInitializeEx(nullptr, COINITBASE_MULTITHREADED | COINIT_DISABLE_OLE1DDE);
 }
 
@@ -38,27 +38,28 @@ void DwmExManager::CopySource()
 	}
 }
 
-void DwmExManager::Initialize(HWND targetWindow)
+bool DwmExManager::InternalInitailize()
 {
-	messageInject->TargetHandle = targetWindow;
-	DwmGetDxSharedSurface = Util::LoadWinAPILibraryAs<PFDwmGetDxSharedSurface>("user32.dll", "DwmGetDxSharedSurface");
+	HWND targetWindow = messageInject->TargetHandle;
 	if (DwmGetDxSharedSurface == nullptr)
 	{
-		return;
+		return true;
 	}
+	if (nullptr == targetWindow)
+		return false;
 	LUID adapterLuid = { 0, };
 	ULONG pFmtWindow = 0;
 	ULONG pPresentFlags = 0;
 	ULONGLONG pWin32kUpdateId = 0;
 	HANDLE temp_targetShardSurface = targetShardSurface;
 	BOOL bSuccess = DwmGetDxSharedSurface(targetWindow, &temp_targetShardSurface, &adapterLuid, &pFmtWindow,
-		&pPresentFlags, &pWin32kUpdateId);
+	                                      &pPresentFlags, &pWin32kUpdateId);
 	if (!bSuccess)
 	{
-		return;
+		return true;
 	}
 	targetShardSurface = temp_targetShardSurface;
-	messageInject->Start();
+
 	D3D_FEATURE_LEVEL pFeatureLevel;
 	UINT Flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_SINGLETHREADED;
 	auto temp_pDevice = m_pDevice;
@@ -69,7 +70,7 @@ void DwmExManager::Initialize(HWND targetWindow)
 	);
 	if (FAILED(hr))
 	{
-		return;
+		return true;
 	}
 
 	m_pDevice = temp_pDevice;
@@ -89,6 +90,16 @@ void DwmExManager::Initialize(HWND targetWindow)
 	m_texture_2d_desc->MipLevels = 1;
 	m_texture_2d_desc->CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ;
 	m_texture_2d_desc->Usage = D3D11_USAGE::D3D11_USAGE_STAGING;
-
-
+	return false;
 }
+
+void DwmExManager::Initialize(HWND targetWindow)
+{
+	messageInject->TargetHandle = targetWindow;
+	DwmGetDxSharedSurface = Util::LoadWinAPILibraryAs<PFDwmGetDxSharedSurface>("user32.dll", "DwmGetDxSharedSurface");
+	if (InternalInitailize()) 
+		return;
+	messageInject->Start();
+}
+
+ 

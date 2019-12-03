@@ -13,9 +13,9 @@ namespace MediaSdk
 		{
 		private:
 			String^ appPath;
-			String^ commandLine;
 			CCube^ cApplication;
 			D3D11Image^ imageSource;
+
 		public:
 			property String^ AppPath
 			{
@@ -29,17 +29,7 @@ namespace MediaSdk
 					appPath = path;
 				};
 			};
-			property String^ CommandLine
-			{
-				String^ get()
-				{
-					return commandLine;
-				};
-				void set(String^ _commandLine)
-				{
-					commandLine = _commandLine;
-				};
-			};
+			 
 
 			property CCube^ Application
 			{
@@ -66,9 +56,7 @@ namespace MediaSdk
 			}
 
 			ProcessConfiguration() :
-				appPath(String::Empty),
-				commandLine(String::Empty)
-
+				appPath(String::Empty)
 			{
 			}
 		};
