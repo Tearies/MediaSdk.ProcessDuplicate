@@ -72,23 +72,27 @@ namespace MediaSdk
 					return hr;
 				}
 			}
+			const float ClearColor[4] = { 0.0, 0.0, 0.0, 1.0f };
+			m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
 			ID3D11Texture2D* pFrameCopy = nullptr;
-		    hr = Manager->Device->CreateTexture2D(Manager->TEXTURE2D_DESC, nullptr, &pFrameCopy);
+			hr = Manager->Device->CreateTexture2D(Manager->TEXTURE2D_DESC, nullptr, &pFrameCopy);
 			ID3D11Texture2D* pSharedTexture = nullptr;
 			hr = Manager->Device->OpenSharedResource(Manager->ShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
 			Manager->DeviceContext->CopyResource(pFrameCopy, pSharedTexture);
 			D3D11_MAPPED_SUBRESOURCE tempsubsource;
 			Manager->DeviceContext->Map(pFrameCopy, 0, D3D11_MAP_READ, 0, &tempsubsource);
-			float ClearColor[4] = { 0.2, 0.2, 0.2, 1.0f };
-			m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
+
 			ID3D11Resource* resource;
 			m_pRenderTargetView->GetResource(&resource);
 			m_pImmediateContext->UpdateSubresource(resource, 0, 0, tempsubsource.pData, tempsubsource.RowPitch, tempsubsource.DepthPitch);
 			Manager->DeviceContext->Unmap(pFrameCopy, 0);
-			resource->Release();
-			pFrameCopy->Release();
+
+
 			if (nullptr != m_pImmediateContext)
 				m_pImmediateContext->Flush();
+			ReleaseInterface(resource);
+			ReleaseInterface(pFrameCopy);
+			ReleaseInterface(pSharedTexture);
 			return hr;
 		}
 
@@ -126,8 +130,7 @@ namespace MediaSdk
 			{
 				return hr;
 			}
-			tempResource11->Release();
-
+			ReleaseInterface(tempResource11);
 			D3D11_RENDER_TARGET_VIEW_DESC rtDesc;
 			rtDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 			rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
@@ -150,13 +153,9 @@ namespace MediaSdk
 			}
 
 			m_pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView, NULL);
-
+			ReleaseInterface(m_pRenderTargetView);
 			m_pRenderTargetView = pRenderTargetView;
-			if (NULL != pOutputResource)
-			{
-				pOutputResource->Release();
-			}
-
+			ReleaseInterface(pOutputResource);
 			return hr;
 		}
 

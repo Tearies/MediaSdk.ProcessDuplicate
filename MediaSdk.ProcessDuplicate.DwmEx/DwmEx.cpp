@@ -41,41 +41,44 @@ void DwmExManager::CopySource()
 bool DwmExManager::InternalInitailize()
 {
 	HWND targetWindow = messageInject->TargetHandle;
-	if (DwmGetDxSharedSurface == nullptr)
-	{
-		return true;
-	}
+	 
 	if (nullptr == targetWindow)
 		return false;
 	LUID adapterLuid = { 0, };
 	ULONG pFmtWindow = 0;
 	ULONG pPresentFlags = 0;
 	ULONGLONG pWin32kUpdateId = 0;
-	HANDLE temp_targetShardSurface = targetShardSurface;
+	HANDLE temp_targetShardSurface = nullptr;
 	BOOL bSuccess = DwmGetDxSharedSurface(targetWindow, &temp_targetShardSurface, &adapterLuid, &pFmtWindow,
 	                                      &pPresentFlags, &pWin32kUpdateId);
 	if (!bSuccess)
 	{
 		return true;
 	}
+	targetShardSurface = NULL;
 	targetShardSurface = temp_targetShardSurface;
-
-	D3D_FEATURE_LEVEL pFeatureLevel;
-	UINT Flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_SINGLETHREADED;
-	auto temp_pDevice = m_pDevice;
-	auto temp_m_pDeviceContext = m_pDeviceContext;
-	HRESULT hr = ::D3D11CreateDevice(
-		nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, Flags, nullptr, 0, D3D11_SDK_VERSION,
-		&temp_pDevice, &pFeatureLevel, &temp_m_pDeviceContext
-	);
-	if (FAILED(hr))
+	if(m_pDevice==nullptr)
 	{
-		return true;
+		D3D_FEATURE_LEVEL pFeatureLevel;
+		UINT Flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_SINGLETHREADED;
+		auto temp_pDevice = m_pDevice;
+		auto temp_m_pDeviceContext = m_pDeviceContext;
+		HRESULT hr = ::D3D11CreateDevice(
+			nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, Flags, nullptr, 0, D3D11_SDK_VERSION,
+			&temp_pDevice, &pFeatureLevel, &temp_m_pDeviceContext
+		);
+		if (FAILED(hr))
+		{
+			return true;
+		}
+		m_pDevice = temp_pDevice;
+		m_pDeviceContext = temp_m_pDeviceContext;
 	}
+	
 
-	m_pDevice = temp_pDevice;
-	m_pDeviceContext = temp_m_pDeviceContext;
+
 	ID3D11Texture2D* pSharedTexture = nullptr;
+
 	HRESULT hrOpenSharedResource = m_pDevice->OpenSharedResource(targetShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
 	D3D11_TEXTURE2D_DESC desc = { 0, };
 	pSharedTexture->GetDesc(&desc);
@@ -90,6 +93,7 @@ bool DwmExManager::InternalInitailize()
 	m_texture_2d_desc->MipLevels = 1;
 	m_texture_2d_desc->CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ;
 	m_texture_2d_desc->Usage = D3D11_USAGE::D3D11_USAGE_STAGING;
+	ReleaseInterface(pSharedTexture);
 	return false;
 }
 

@@ -9,5 +9,8 @@
 #include <windows.h> 
 #define RemottingSharedHandle "VBI.Media.Shared.HostHwnd"
 #define VBIDEFINEMSGCODE 0x4001
+#define IFC(x) { hr = (x); if (FAILED(hr)) { goto Cleanup; }}
+#define ReleaseInterface(x) { if (NULL != x) { x->Release(); x = NULL; }}
+#define ReleaseHandle(x){if(NULL!=x){CloseHandle(x);}}
 #endif //PCH_H
 

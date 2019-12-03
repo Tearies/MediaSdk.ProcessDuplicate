@@ -5,8 +5,7 @@
 #include "d3d9.h"
 #include <D3D10_1.h>
 
-#define IFC(x) { hr = (x); if (FAILED(hr)) { goto Cleanup; }}
-#define ReleaseInterface(x) { if (NULL != x) { x->Release(); x = NULL; }}
+
 
  
 
