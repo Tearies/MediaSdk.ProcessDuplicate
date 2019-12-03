@@ -8,14 +8,6 @@
 #define PCH_H
 #include <windows.h> 
 #define RemottingSharedHandle "VBI.Media.Shared.HostHwnd"
-
-typedef class BROADCAST_MESSAGE
-{
-public:
-	INT32 ProcessID;
-	INT32 MSG;
-	WPARAM ReleativeWParam;
-	LPARAM ReleativeLParam;
-} 	BROADCAST_MESSAGE;
+#define VBIDEFINEMSGCODE 0x4001
 #endif //PCH_H
 

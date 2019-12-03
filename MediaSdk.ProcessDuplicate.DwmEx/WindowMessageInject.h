@@ -9,7 +9,7 @@ dst_type pointer_cast(src_type src)
 
 
 
- 
+
 
 namespace MediaSdk
 {
@@ -24,12 +24,17 @@ namespace MediaSdk
 				HWND targetHandle = 0;
 				DWORD ThreadID;
 				DWORD ProcessID;
-				HHOOK Hook;
-				WPARAM BuildWParam(int Code, WPARAM w_param, LPARAM l_param);
-				LRESULT  MessageProcess(int Code, WPARAM wParam, LPARAM lParam);
+				HWINEVENTHOOK Hook;
+				void CALLBACK  MessageProcess(HWINEVENTHOOK hWinEventHook,
+					DWORD event,
+					HWND hwnd,
+					LONG idObject,
+					LONG idChild,
+					DWORD idEventThread,
+					DWORD dwmsEventTime);
 			public:
 				WindowMessageInject();
-				 
+
 				_declspec(property(get = GetTargetHandle, put = SetTargetHandle)) HWND TargetHandle;
 				HWND GetTargetHandle()
 				{

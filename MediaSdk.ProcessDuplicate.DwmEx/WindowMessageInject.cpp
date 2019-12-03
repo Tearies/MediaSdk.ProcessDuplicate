@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "WindowMessageInject.h"
 #include <tchar.h>
- 
+#include <cstring>
+#include <string>
+
 
 namespace MediaSdk
 {
@@ -14,45 +16,42 @@ namespace MediaSdk
 			{
 			}
 
-			 
-
-			WPARAM WindowMessageInject::BuildWParam(int Code, WPARAM w_param, LPARAM l_param)
+			void CALLBACK  WindowMessageInject::MessageProcess(HWINEVENTHOOK hWinEventHook,
+				DWORD event,
+				HWND hwnd,
+				LONG idObject,
+				LONG idChild,
+				DWORD idEventThread,
+				DWORD dwmsEventTime)
 			{
-				BROADCAST_MESSAGE broadcast_message;
-				broadcast_message.ProcessID = GetCurrentProcessId();
-				broadcast_message.ReleativeWParam = w_param;
-				broadcast_message.MSG = Code;
-				broadcast_message.ReleativeLParam = l_param;
-				return reinterpret_cast<WPARAM>(&broadcast_message);
-			}
 
-			LRESULT  WindowMessageInject::MessageProcess(const int Code, WPARAM wParam, LPARAM lParam)
-			{
-				auto remotingHandle= Environment::GetEnvironmentVariable(RemottingSharedHandle);
+				auto remotingHandle = Environment::GetEnvironmentVariable(RemottingSharedHandle);
 				int temp;
-				if(int::TryParse(remotingHandle,temp))
+				if (int::TryParse(remotingHandle, temp))
 				{
-					::SendMessageA((HWND)temp, Code, wParam, lParam);
+					 
+					::SendMessageA((HWND)temp, VBIDEFINEMSGCODE, 0, 0);
+
 				}
-				return CallNextHookEx(NULL,Code,wParam,lParam);
 			}
 
 			void WindowMessageInject::Start()
 			{
-				BROADCAST_Message = ::RegisterWindowMessageA("MediaSdk.ProcessDuplicate_BROADCAST_MESSAGE");
+
 				DWORD processID;
 				DWORD threadID;
 				threadID = GetWindowThreadProcessId(this->TargetHandle, &processID);
 				this->ProcessID = processID;
 				this->ThreadID = threadID;
-				Hook = SetWindowsHookExA(WH_MSGFILTER, pointer_cast<HOOKPROC>(&WindowMessageInject::MessageProcess), GetModuleHandleA("MediaSdk.ProcessDuplicate.DwmEx.dll"), threadID);
+
+				Hook = SetWinEventHook(EVENT_SYSTEM_MINIMIZESTART, EVENT_SYSTEM_MINIMIZEEND, GetModuleHandleA("MediaSdk.ProcessDuplicate.DwmEx.dll"), pointer_cast<WINEVENTPROC>(&WindowMessageInject::MessageProcess), processID, threadID, WINEVENT_INCONTEXT | WINEVENT_SKIPOWNPROCESS);
 				DWORD error = GetLastError();
 				HRESULT hr = HRESULT_FROM_WIN32(error);
 			}
 
 			void WindowMessageInject::Stop()
 			{
-				UnhookWindowsHookEx(Hook);
+				UnhookWinEvent(Hook);
 			}
 		}
 	}

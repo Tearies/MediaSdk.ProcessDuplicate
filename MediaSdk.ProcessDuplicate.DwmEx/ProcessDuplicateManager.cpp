@@ -15,10 +15,10 @@ void ProcessDuplicateManager::OnClockTick(Object^ sender, EventArgs^ args)
 
 void ProcessDuplicateManager::DoRender()
 {
-	 process_configuration->ImageSource->RequestRender();
+	process_configuration->ImageSource->RequestRender();
 }
 
-ProcessDuplicateManager::ProcessDuplicateManager():
+ProcessDuplicateManager::ProcessDuplicateManager() :
 	dwm_ex_manager(gcnew DwmExManager()),
 	media_context(gcnew MediaContext()),
 	currentUIDistpatcher(Application::Current->Dispatcher)
@@ -41,9 +41,12 @@ void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
 	process_configuration = configuration;
 	ProcessStartInfo^ startInfo = gcnew ProcessStartInfo();
 	startInfo->FileName = configuration->AppPath;
-	startInfo->Environment->Add(RemottingSharedHandle, this->RemottingHandle->ToInt32().ToString());
+	System::Console::WriteLine(this->RemottingHandle->ToString());
+	startInfo->Environment->Add(RemottingSharedHandle, this->RemottingHandle->ToString());
 	startInfo->UseShellExecute = false;
 	targetProcess = Process::Start(startInfo);
+	targetProcess->EnableRaisingEvents = true;
+	targetProcess->Exited += gcnew System::EventHandler(this, &MediaSdk::Common::ProcessDuplicateManager::OnExited);
 	targetProcess->WaitForInputIdle();
 	Thread::Sleep(1000);
 	dwm_ex_manager->Initialize(reinterpret_cast<HWND>(targetProcess->MainWindowHandle.ToInt32()));
@@ -56,7 +59,8 @@ void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
 void ProcessDuplicateManager::End()
 {
 	dwm_ex_manager->Stop();
-	targetProcess->Kill();
+	if (nullptr != targetProcess)
+		targetProcess->Kill();
 }
 
 
@@ -70,4 +74,10 @@ void ProcessDuplicateManager::OnTargetSizeChanged(System::Object^ sender, System
 void ProcessDuplicateManager::OnShutdownStarted(Object^ sender, EventArgs^ e)
 {
 	End();
+}
+
+
+void MediaSdk::Common::ProcessDuplicateManager::OnExited(System::Object^ sender, System::EventArgs^ e)
+{
+	targetProcess = nullptr;
 }
