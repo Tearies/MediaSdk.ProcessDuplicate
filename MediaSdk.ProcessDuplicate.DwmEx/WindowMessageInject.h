@@ -29,6 +29,7 @@ namespace MediaSdk
 				LRESULT  MessageProcess(int Code, WPARAM wParam, LPARAM lParam);
 			public:
 				WindowMessageInject();
+				 
 				_declspec(property(get = GetTargetHandle, put = SetTargetHandle)) HWND TargetHandle;
 				HWND GetTargetHandle()
 				{
@@ -39,6 +40,7 @@ namespace MediaSdk
 					this->targetHandle = handle;
 				}
 				void Start();
+				void Stop();
 			};
 
 		}

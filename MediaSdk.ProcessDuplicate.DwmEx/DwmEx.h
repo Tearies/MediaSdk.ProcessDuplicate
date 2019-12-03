@@ -68,7 +68,7 @@ namespace MediaSdk
 			void CopySource();
 			bool InternalInitailize();
 			void Initialize(HWND targetWindow);
-			 
+			void Stop();
 		};
 	}
 }

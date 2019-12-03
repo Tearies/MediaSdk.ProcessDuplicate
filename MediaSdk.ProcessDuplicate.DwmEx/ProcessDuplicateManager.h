@@ -68,6 +68,7 @@ namespace MediaSdk
 			 */
 			void End();
 			void OnTargetSizeChanged(System::Object^ sender, System::EventArgs^ e);
+			void OnShutdownStarted(System::Object^ sender, System::EventArgs^ e);
 		};
 	}
 }

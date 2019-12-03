@@ -14,6 +14,8 @@ namespace MediaSdk
 			{
 			}
 
+			 
+
 			WPARAM WindowMessageInject::BuildWParam(int Code, WPARAM w_param, LPARAM l_param)
 			{
 				BROADCAST_MESSAGE broadcast_message;
@@ -30,7 +32,6 @@ namespace MediaSdk
 				int temp;
 				if(int::TryParse(remotingHandle,temp))
 				{
-					//System::Windows::Forms::MessageBox::Show(Code.ToString());
 					::SendMessageA((HWND)temp, Code, wParam, lParam);
 				}
 				return CallNextHookEx(NULL,Code,wParam,lParam);
@@ -47,6 +48,11 @@ namespace MediaSdk
 				Hook = SetWindowsHookExA(WH_MSGFILTER, pointer_cast<HOOKPROC>(&WindowMessageInject::MessageProcess), GetModuleHandleA("MediaSdk.ProcessDuplicate.DwmEx.dll"), threadID);
 				DWORD error = GetLastError();
 				HRESULT hr = HRESULT_FROM_WIN32(error);
+			}
+
+			void WindowMessageInject::Stop()
+			{
+				UnhookWindowsHookEx(Hook);
 			}
 		}
 	}

@@ -102,4 +102,9 @@ void DwmExManager::Initialize(HWND targetWindow)
 	messageInject->Start();
 }
 
+void DwmExManager::Stop()
+{
+	messageInject->Stop();
+}
+
  

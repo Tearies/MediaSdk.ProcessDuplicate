@@ -23,6 +23,7 @@ ProcessDuplicateManager::ProcessDuplicateManager():
 	media_context(gcnew MediaContext()),
 	currentUIDistpatcher(Application::Current->Dispatcher)
 {
+	currentUIDistpatcher->ShutdownStarted += gcnew System::EventHandler(this, &MediaSdk::Common::ProcessDuplicateManager::OnShutdownStarted);
 	messageWindow = gcnew  MessageWindow();
 	messageWindow->TargetSizeChanged += gcnew System::EventHandler<System::EventArgs^>(this, &MediaSdk::Common::ProcessDuplicateManager::OnTargetSizeChanged);
 }
@@ -54,6 +55,7 @@ void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
 
 void ProcessDuplicateManager::End()
 {
+	dwm_ex_manager->Stop();
 	targetProcess->Kill();
 }
 
@@ -62,4 +64,10 @@ void ProcessDuplicateManager::OnTargetSizeChanged(System::Object^ sender, System
 {
 	dwm_ex_manager->InternalInitailize();
 	process_configuration->ImageSource->SetPixelSize(dwm_ex_manager->TEXTURE2D_DESC->Width, dwm_ex_manager->TEXTURE2D_DESC->Height);
+}
+
+
+void ProcessDuplicateManager::OnShutdownStarted(Object^ sender, EventArgs^ e)
+{
+	End();
 }
