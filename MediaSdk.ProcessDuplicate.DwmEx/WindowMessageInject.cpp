@@ -3,7 +3,7 @@
 #include <tchar.h>
 #include <cstring>
 #include <string>
-
+#include "oleacc.h"
 
 namespace MediaSdk
 {
@@ -16,7 +16,7 @@ namespace MediaSdk
 			{
 			}
 
-			void CALLBACK  WindowMessageInject::MessageProcess(HWINEVENTHOOK hWinEventHook,
+			void CALLBACK MessageProcess(HWINEVENTHOOK hWinEventHook,
 				DWORD event,
 				HWND hwnd,
 				LONG idObject,
@@ -29,9 +29,16 @@ namespace MediaSdk
 				int temp;
 				if (int::TryParse(remotingHandle, temp))
 				{
-					 
-					::SendMessageA((HWND)temp, VBIDEFINEMSGCODE, 0, 0);
-
+					switch (event)
+					{
+					case EVENT_SYSTEM_MOVESIZESTART:
+					case EVENT_SYSTEM_MOVESIZEEND:
+					case EVENT_SYSTEM_MINIMIZESTART:
+					case EVENT_SYSTEM_MINIMIZEEND:
+						::SendMessageA((HWND)temp, VBIDEFINEMSGCODE, 0, 0);
+						break;
+					}
+				
 				}
 			}
 
@@ -44,7 +51,7 @@ namespace MediaSdk
 				this->ProcessID = processID;
 				this->ThreadID = threadID;
 
-				Hook = SetWinEventHook(EVENT_SYSTEM_MINIMIZESTART, EVENT_SYSTEM_MINIMIZEEND, GetModuleHandleA("MediaSdk.ProcessDuplicate.DwmEx.dll"), pointer_cast<WINEVENTPROC>(&WindowMessageInject::MessageProcess), processID, threadID, WINEVENT_INCONTEXT | WINEVENT_SKIPOWNPROCESS);
+				Hook = SetWinEventHook(EVENT_MIN, EVENT_MAX, GetModuleHandleA("MediaSdk.ProcessDuplicate.DwmEx.dll"), MessageProcess, processID, threadID, WINEVENT_INCONTEXT | WINEVENT_SKIPOWNPROCESS);
 				DWORD error = GetLastError();
 				HRESULT hr = HRESULT_FROM_WIN32(error);
 			}

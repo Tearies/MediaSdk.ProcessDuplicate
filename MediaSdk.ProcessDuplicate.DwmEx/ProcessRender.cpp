@@ -27,17 +27,7 @@ namespace MediaSdk
 
 		void ProcessRender::ResizeSurface()
 		{
-			/*	if (!this->IsLoaded)
-					return;
-				double dpiScale = 1.0;
-				auto hwndTarget = static_cast<HwndTarget^>(PresentationSource::FromVisual(this)->CompositionTarget);
-				if (hwndTarget != nullptr)
-				{
-					dpiScale = hwndTarget->TransformToDevice.M11;
-				}
-				int surfWidth = (int)(this->ActualWidth < 0 ? 0 : Math::Ceiling(this->ActualWidth * dpiScale));
-				int surfHeight = (int)(this->ActualHeight < 0 ? 0 : Math::Ceiling(this->ActualHeight * dpiScale));
-				this->imageSource->SetPixelSize(surfWidth, surfHeight);*/
+
 		}
 
 		void ProcessRender::OnRenderSizeChanged(SizeChangedInfo^ info)
@@ -62,8 +52,8 @@ void ProcessRender::OnLoaded(Object^ sender, RoutedEventArgs^ e)
 	this->Child = control;
 	ProcessConfiguration^ config = gcnew ProcessConfiguration();
 
-	//config->AppPath = "D:\\支持\\冀北\\日志+沙盘\\NinthLayer1112\\NinthLayer_New.exe";
-	config->AppPath = "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe";
+	config->AppPath = "D:\\支持\\冀北\\日志+沙盘\\NinthLayer1112\\NinthLayer_New.exe";
+	//config->AppPath = "C:\\Program Files\\Windows NT\\Accessories\\wordpad.exe";
 	if (!DesignerProperties::GetIsInDesignMode(this))
 	{
 		this->imageSource = gcnew D3D11Image();

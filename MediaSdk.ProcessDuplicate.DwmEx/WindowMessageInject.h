@@ -17,7 +17,13 @@ namespace MediaSdk
 	{
 		namespace Common
 		{
-
+			void CALLBACK  MessageProcess(HWINEVENTHOOK hWinEventHook,
+				DWORD event,
+				HWND hwnd,
+				LONG idObject,
+				LONG idChild,
+				DWORD idEventThread,
+				DWORD dwmsEventTime);
 			public  class WindowMessageInject
 			{
 			private:
@@ -25,13 +31,7 @@ namespace MediaSdk
 				DWORD ThreadID;
 				DWORD ProcessID;
 				HWINEVENTHOOK Hook;
-				void CALLBACK  MessageProcess(HWINEVENTHOOK hWinEventHook,
-					DWORD event,
-					HWND hwnd,
-					LONG idObject,
-					LONG idChild,
-					DWORD idEventThread,
-					DWORD dwmsEventTime);
+				
 			public:
 				WindowMessageInject();
 
