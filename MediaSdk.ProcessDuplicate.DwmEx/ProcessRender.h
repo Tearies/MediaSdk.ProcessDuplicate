@@ -11,7 +11,7 @@ using namespace System::Windows::Controls;
 using namespace Windows::Media;
 using namespace ComponentModel;
 using namespace MediaSdk::DxRender;
-
+using namespace Microsoft::Win32;
 namespace MediaSdk
 {
 	namespace Controls
