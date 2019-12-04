@@ -15,29 +15,6 @@ DwmExManager::DwmExManager() :
 	CoInitializeEx(nullptr, COINITBASE_MULTITHREADED | COINIT_DISABLE_OLE1DDE);
 }
 
-
-void DwmExManager::CopySource()
-{
-	try
-	{
-		/*	ID3D11Texture2D* pFrameCopy = nullptr;
-			HRESULT hr = m_pDevice->CreateTexture2D(m_descFrame, nullptr, &pFrameCopy);
-			ID3D11Texture2D* pSharedTexture = nullptr;
-			hr = m_pDevice->OpenSharedResource(targetShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
-			m_pDeviceContext->CopyResource(pFrameCopy, pSharedTexture);
-			D3D11_MAPPED_SUBRESOURCE tempsubsource;
-			m_pDeviceContext->Map(pFrameCopy, 0, D3D11_MAP_READ, 0, &tempsubsource);
-			m_pDeviceContext->Unmap(pFrameCopy, 0);
-			backBuffer = &tempsubsource;
-			pFrameCopy->Release();
-			pSharedTexture->Release();*/
-
-	}
-	catch (Exception ^ e)
-	{
-	}
-}
-
 bool DwmExManager::InternalInitailize()
 {
 	HWND targetWindow = messageInject->TargetHandle;

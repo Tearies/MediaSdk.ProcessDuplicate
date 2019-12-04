@@ -65,7 +65,6 @@ namespace MediaSdk
 			 * \brief 
 			 */
 			DwmExManager();
-			void CopySource();
 			bool InternalInitailize();
 			void Initialize(HWND targetWindow);
 			void Stop();
