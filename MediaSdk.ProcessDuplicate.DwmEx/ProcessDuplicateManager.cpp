@@ -15,12 +15,11 @@ void ProcessDuplicateManager::DoRender()
 }
 
 ProcessDuplicateManager::ProcessDuplicateManager() :
-
+	messageWindow(gcnew  MessageWindow()),
 	media_context(gcnew MediaContext()),
 	currentUIDistpatcher(Application::Current->Dispatcher)
 {
 	currentUIDistpatcher->ShutdownStarted += gcnew System::EventHandler(this, &MediaSdk::Common::ProcessDuplicateManager::OnShutdownStarted);
-	messageWindow = gcnew  MessageWindow();
 	messageWindow->TargetSizeChanged += gcnew System::EventHandler<System::EventArgs^>(this, &MediaSdk::Common::ProcessDuplicateManager::OnTargetSizeChanged);
 }
 
@@ -36,8 +35,9 @@ void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
 	process_configuration = configuration;
 	ProcessStartInfo^ startInfo = gcnew ProcessStartInfo();
 	startInfo->FileName = configuration->AppPath;
-	System::Console::WriteLine(this->RemottingHandle->ToString());
-	startInfo->Environment->Add(RemottingSharedHandle, this->RemottingHandle->ToString());
+	auto handle = this->RemottingHandle;
+	System::Console::WriteLine(handle.ToString());
+	Environment::SetEnvironmentVariable(RemottingSharedHandle, handle.ToString(), EnvironmentVariableTarget::Process);
 	startInfo->UseShellExecute = false;
 	targetProcess = Process::Start(startInfo);
 	targetProcess->EnableRaisingEvents = true;

@@ -24,7 +24,6 @@ namespace MediaSdk
 				DWORD idEventThread,
 				DWORD dwmsEventTime)
 			{
-
 				auto remotingHandle = Environment::GetEnvironmentVariable(RemottingSharedHandle);
 				int temp;
 				if (int::TryParse(remotingHandle, temp))
@@ -38,19 +37,17 @@ namespace MediaSdk
 						::SendMessageA((HWND)temp, VBIDEFINEMSGCODE, 0, 0);
 						break;
 					}
-				
+
 				}
 			}
 
 			void WindowMessageInject::Start()
 			{
-
 				DWORD processID;
 				DWORD threadID;
 				threadID = GetWindowThreadProcessId(this->TargetHandle, &processID);
 				this->ProcessID = processID;
 				this->ThreadID = threadID;
-
 				Hook = SetWinEventHook(EVENT_MIN, EVENT_MAX, GetModuleHandleA("MediaSdk.ProcessDuplicate.DwmEx.dll"), MessageProcess, processID, threadID, WINEVENT_INCONTEXT | WINEVENT_SKIPOWNPROCESS);
 				DWORD error = GetLastError();
 				HRESULT hr = HRESULT_FROM_WIN32(error);

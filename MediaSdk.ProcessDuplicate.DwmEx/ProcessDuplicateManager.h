@@ -47,9 +47,9 @@ namespace MediaSdk
 		public:
 			ProcessDuplicateManager();
 			~ProcessDuplicateManager();
-			property IntPtr^ RemottingHandle
+			property IntPtr RemottingHandle
 			{
-				IntPtr^ get()
+				IntPtr get()
 				{
 					return messageWindow->Handle;
 				}

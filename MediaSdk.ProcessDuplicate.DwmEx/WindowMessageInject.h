@@ -32,9 +32,10 @@ namespace MediaSdk
 				DWORD ProcessID;
 				HWINEVENTHOOK Hook;
 				
-			public:
-				WindowMessageInject();
 
+			public: 
+				WindowMessageInject();
+				static  HWND MessageHandle;
 				_declspec(property(get = GetTargetHandle, put = SetTargetHandle)) HWND TargetHandle;
 				HWND GetTargetHandle()
 				{
@@ -44,6 +45,10 @@ namespace MediaSdk
 				{
 					this->targetHandle = handle;
 				}
+				 
+			 
+
+				
 				void Start();
 				void Stop();
 			};
