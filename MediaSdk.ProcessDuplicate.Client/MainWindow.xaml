@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <controls:ProcessRender x:Name="host"></controls:ProcessRender>
-        <TextBlock Foreground="Yellow" FontSize="64" FontFamily="Kaiti" Text="AAA"/>
+        <controls:ProcessRender Margin="10" x:Name="host"></controls:ProcessRender>
+        <TextBlock Foreground="Red" FontSize="64" FontFamily="Kaiti" Text="AAA"/>
     </Grid>
 </Window>

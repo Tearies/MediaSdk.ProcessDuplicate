@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CCube.h"
- 
+
 
 
 namespace MediaSdk
@@ -8,6 +8,8 @@ namespace MediaSdk
 
 	namespace DxRender
 	{
+
+
 		void CCube::InitDevice()
 		{
 			HRESULT hr = S_OK;
@@ -48,6 +50,73 @@ namespace MediaSdk
 					break;
 				}
 			}
+
+
+
+			// Compile the pixel shader
+			ID3DBlob* pPSBlob = NULL;
+			hr = CompileShaderFromFile(L"./Shader/PixelShader.hlsl", "PS", "ps_5_0", &pPSBlob);
+
+
+			// Create the pixel shader
+			hr = m_pd3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &m_pPixelShader);
+			pPSBlob->Release();
+
+
+			// Compile the vertex shader
+			ID3DBlob* pVSBlob = NULL;
+			hr = CompileShaderFromFile(L"./Shader/PixelShader.hlsl", "VS", "vs_5_0", &pVSBlob);
+
+
+			// Create the vertex shader
+			hr = m_pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &m_pVertexShader);
+
+
+			// Define the input layout
+			D3D11_INPUT_ELEMENT_DESC layout[] =
+			{
+				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			};
+			UINT numElements = ARRAYSIZE(layout);
+
+			// Create the input layout
+			hr = m_pd3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
+				pVSBlob->GetBufferSize(), &m_pVertexLayout);
+			pVSBlob->Release();
+
+
+			// Set the input layout
+			m_pImmediateContext->IASetInputLayout(m_pVertexLayout);
+
+			Vertex vertices[] =
+			{
+				 { new RawVector3(-1.0f, 1.0f, 0.5f),  new RawVector2(0.0f, 0.0f) },
+				 { new RawVector3(1.0f, 1.0f, 0.5f), new RawVector2(1.0f, 0.0f) },
+				 { new RawVector3(-1.0f, -1.0f, 0.5f), new RawVector2(0.0f, 1.0f) },
+				 { new RawVector3(1.0f, -1.0f, 0.5f), new RawVector2(1.0f, 1.0f) }
+			};
+
+			D3D11_BUFFER_DESC bd;
+			ZeroMemory(&bd, sizeof(bd));
+			bd.Usage = D3D11_USAGE_DEFAULT;
+			bd.ByteWidth = sizeof(Vertex) * 4;
+			bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+			bd.CPUAccessFlags = 0;
+			D3D11_SUBRESOURCE_DATA InitData;
+			ZeroMemory(&InitData, sizeof(InitData));
+			InitData.pSysMem = vertices;
+			hr = m_pd3dDevice->CreateBuffer(&bd, &InitData, &m_pVertexBuffer);
+
+			UINT stride = sizeof(Vertex);
+			UINT offset = 0;
+			m_pImmediateContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+
+			// Set primitive topology
+			m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+
 		}
 
 		CCube::CCube()
@@ -56,7 +125,7 @@ namespace MediaSdk
 			m_featureLevel = D3D_FEATURE_LEVEL_11_0;
 			m_pd3dDevice = NULL;
 			m_pImmediateContext = NULL;
-			remoting_texture_desc=new D3D11_TEXTURE2D_DESC;
+			remoting_texture_desc = new D3D11_TEXTURE2D_DESC;
 			messageInject = new WindowMessageInject;
 			DwmGetDxSharedSurface = Util::LoadWinAPILibraryAs<PFDwmGetDxSharedSurface>("user32.dll", "DwmGetDxSharedSurface");
 			this->InitDevice();
@@ -77,24 +146,14 @@ namespace MediaSdk
 			}
 			const float ClearColor[4] = { 0.0, 0.0, 0.0, 1.0f };
 			m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
-			ID3D11Texture2D* pFrameCopy = nullptr;
-			hr = m_pd3dDevice->CreateTexture2D(Remoting_DESC, nullptr, &pFrameCopy);
 			ID3D11Texture2D* pSharedTexture = nullptr;
 			hr = m_pd3dDevice->OpenSharedResource(targetShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
-			m_pImmediateContext->CopyResource(pFrameCopy, pSharedTexture);
-			D3D11_MAPPED_SUBRESOURCE tempsubsource;
-			m_pImmediateContext->Map(pFrameCopy, 0, D3D11_MAP_READ, 0, &tempsubsource);
-
-			ID3D11Resource* resource;
+			ID3D11Resource* resource; 
 			m_pRenderTargetView->GetResource(&resource);
-			m_pImmediateContext->UpdateSubresource(resource, 0, 0, tempsubsource.pData, tempsubsource.RowPitch, tempsubsource.DepthPitch);
-			m_pImmediateContext->Unmap(pFrameCopy, 0);
-
-
+			m_pImmediateContext->CopyResource(resource, pSharedTexture);
 			if (nullptr != m_pImmediateContext)
 				m_pImmediateContext->Flush();
 			ReleaseInterface(resource);
-			ReleaseInterface(pFrameCopy);
 			ReleaseInterface(pSharedTexture);
 			return hr;
 		}
@@ -145,6 +204,14 @@ namespace MediaSdk
 				return hr;
 			}
 
+			D3D11_DEPTH_STENCIL_VIEW_DESC depthdec;
+			depthdec.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+			depthdec.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+			depthdec.Texture2D.MipSlice = 0;
+
+			ID3D11DepthStencilView* pDepthStencilView;
+			m_pd3dDevice->CreateDepthStencilView(pOutputResource, &depthdec, &pDepthStencilView);
+
 			D3D11_TEXTURE2D_DESC outputResourceDesc;
 			pOutputResource->GetDesc(&outputResourceDesc);
 			if (outputResourceDesc.Width != m_Width || outputResourceDesc.Height != m_Height)
@@ -155,9 +222,10 @@ namespace MediaSdk
 				SetUpViewport();
 			}
 
-			m_pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView, NULL);
+			m_pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
 			ReleaseInterface(m_pRenderTargetView);
 			m_pRenderTargetView = pRenderTargetView;
+			m_pDepthStencilView = pDepthStencilView;
 			ReleaseInterface(pOutputResource);
 			return hr;
 		}
@@ -177,11 +245,11 @@ namespace MediaSdk
 		void CCube::Initialize(HWND handle)
 		{
 			messageInject->TargetHandle = handle;
-			if(InternalInitailize())
+			if (InternalInitailize())
 			{
 				messageInject->Start();
 			}
-			
+
 		}
 
 		bool CCube::InternalInitailize()
@@ -200,7 +268,7 @@ namespace MediaSdk
 			}
 			targetShardSurface = NULL;
 			targetShardSurface = temp_targetShardSurface;
-			
+
 			ID3D11Texture2D* pSharedTexture = nullptr;
 			HRESULT hrOpenSharedResource = m_pd3dDevice->OpenSharedResource(targetShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
 			D3D11_TEXTURE2D_DESC desc = { 0, };
@@ -221,8 +289,8 @@ namespace MediaSdk
 		}
 		void CCube::Resize()
 		{
-		 InternalInitailize();
-			
+			InternalInitailize();
+
 		}
 
 		void CCube::Stop()

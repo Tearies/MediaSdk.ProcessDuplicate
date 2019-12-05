@@ -22,12 +22,17 @@ namespace MediaSdk
 			ID3D11DeviceContext* m_pImmediateContext;
 			IDXGISwapChain* m_pSwapChain = NULL;
 			ID3D11RenderTargetView* m_pRenderTargetView = NULL;
+			ID3D11DepthStencilView* m_pDepthStencilView;
 			ID3D11Texture2D* outputBufffer;
 			D3D11_TEXTURE2D_DESC* remoting_texture_desc;
 			void InitDevice();
 			WindowMessageInject* messageInject;
 			PFDwmGetDxSharedSurface DwmGetDxSharedSurface;
 			HANDLE targetShardSurface = nullptr;
+			ID3D11InputLayout* m_pVertexLayout;
+			ID3D11VertexShader* m_pVertexShader;
+			ID3D11PixelShader* m_pPixelShader;
+			ID3D11Buffer* m_pVertexBuffer;
 			//DwmExManager^ dwmExManager;
 		public:
 			_declspec(property(get = GetRemotingDESC)) D3D11_TEXTURE2D_DESC* Remoting_DESC;
