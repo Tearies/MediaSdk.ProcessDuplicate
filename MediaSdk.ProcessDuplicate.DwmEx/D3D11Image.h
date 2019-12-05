@@ -1,12 +1,12 @@
 #pragma once
 #include "SurfaceQueueInteropHelper.h"
-#include "DwmEx.h"
+
 using namespace System;
 using namespace System::Windows::Interop;
 using namespace System::Windows;
 namespace MediaSdk
 {
-	using namespace DwmEx;
+ 
 	namespace Controls
 	{
 		public ref class D3D11Image : public D3DImage

@@ -13,7 +13,7 @@ namespace MediaSdk
 		{
 		private:
 			String^ appPath;
-			CCube^ cApplication;
+			CCube* cApplication;
 			D3D11Image^ imageSource;
 
 		public:
@@ -31,13 +31,13 @@ namespace MediaSdk
 			};
 			 
 
-			property CCube^ Application
+			property CCube* Application
 			{
-				CCube^ get()
+				CCube* get()
 				{
 					return cApplication;
 				};
-				void set(CCube^ commandLine)
+				void set(CCube* commandLine)
 				{
 					cApplication = commandLine;
 				};

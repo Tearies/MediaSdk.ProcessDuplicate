@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CCube.h"
-#include "Util.h"
+ 
 
 
 namespace MediaSdk
@@ -56,6 +56,9 @@ namespace MediaSdk
 			m_featureLevel = D3D_FEATURE_LEVEL_11_0;
 			m_pd3dDevice = NULL;
 			m_pImmediateContext = NULL;
+			remoting_texture_desc=new D3D11_TEXTURE2D_DESC;
+			messageInject = new WindowMessageInject;
+			DwmGetDxSharedSurface = Util::LoadWinAPILibraryAs<PFDwmGetDxSharedSurface>("user32.dll", "DwmGetDxSharedSurface");
 			this->InitDevice();
 		}
 
@@ -75,17 +78,17 @@ namespace MediaSdk
 			const float ClearColor[4] = { 0.0, 0.0, 0.0, 1.0f };
 			m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
 			ID3D11Texture2D* pFrameCopy = nullptr;
-			hr = Manager->Device->CreateTexture2D(Manager->TEXTURE2D_DESC, nullptr, &pFrameCopy);
+			hr = m_pd3dDevice->CreateTexture2D(Remoting_DESC, nullptr, &pFrameCopy);
 			ID3D11Texture2D* pSharedTexture = nullptr;
-			hr = Manager->Device->OpenSharedResource(Manager->ShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
-			Manager->DeviceContext->CopyResource(pFrameCopy, pSharedTexture);
+			hr = m_pd3dDevice->OpenSharedResource(targetShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
+			m_pImmediateContext->CopyResource(pFrameCopy, pSharedTexture);
 			D3D11_MAPPED_SUBRESOURCE tempsubsource;
-			Manager->DeviceContext->Map(pFrameCopy, 0, D3D11_MAP_READ, 0, &tempsubsource);
+			m_pImmediateContext->Map(pFrameCopy, 0, D3D11_MAP_READ, 0, &tempsubsource);
 
 			ID3D11Resource* resource;
 			m_pRenderTargetView->GetResource(&resource);
 			m_pImmediateContext->UpdateSubresource(resource, 0, 0, tempsubsource.pData, tempsubsource.RowPitch, tempsubsource.DepthPitch);
-			Manager->DeviceContext->Unmap(pFrameCopy, 0);
+			m_pImmediateContext->Unmap(pFrameCopy, 0);
 
 
 			if (nullptr != m_pImmediateContext)
@@ -169,6 +172,62 @@ namespace MediaSdk
 			vp.TopLeftX = 0;
 			vp.TopLeftY = 0;
 			m_pImmediateContext->RSSetViewports(1, &vp);
+		}
+
+		void CCube::Initialize(HWND handle)
+		{
+			messageInject->TargetHandle = handle;
+			if(InternalInitailize())
+			{
+				messageInject->Start();
+			}
+			
+		}
+
+		bool CCube::InternalInitailize()
+		{
+			HWND targetWindow = messageInject->TargetHandle;
+			LUID adapterLuid = { 0, };
+			ULONG pFmtWindow = 0;
+			ULONG pPresentFlags = 0;
+			ULONGLONG pWin32kUpdateId = 0;
+			HANDLE temp_targetShardSurface = nullptr;
+			BOOL bSuccess = DwmGetDxSharedSurface(targetWindow, &temp_targetShardSurface, &adapterLuid, &pFmtWindow,
+				&pPresentFlags, &pWin32kUpdateId);
+			if (!bSuccess)
+			{
+				return true;
+			}
+			targetShardSurface = NULL;
+			targetShardSurface = temp_targetShardSurface;
+			
+			ID3D11Texture2D* pSharedTexture = nullptr;
+			HRESULT hrOpenSharedResource = m_pd3dDevice->OpenSharedResource(targetShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
+			D3D11_TEXTURE2D_DESC desc = { 0, };
+			pSharedTexture->GetDesc(&desc);
+			remoting_texture_desc->Width = desc.Width;
+			remoting_texture_desc->Height = desc.Height;
+			remoting_texture_desc->Format = desc.Format;
+			remoting_texture_desc->ArraySize = 1;
+			remoting_texture_desc->BindFlags = 0; // D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET;
+			remoting_texture_desc->MiscFlags = 0; // D3D11_RESOURCE_MISC_FLAG::D3D11_RESOURCE_MISC_GDI_COMPATIBLE;
+			remoting_texture_desc->SampleDesc.Count = 1;
+			remoting_texture_desc->SampleDesc.Quality = 0;
+			remoting_texture_desc->MipLevels = 1;
+			remoting_texture_desc->CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ;
+			remoting_texture_desc->Usage = D3D11_USAGE::D3D11_USAGE_STAGING;
+			ReleaseInterface(pSharedTexture);
+			return true;
+		}
+		void CCube::Resize()
+		{
+		 InternalInitailize();
+			
+		}
+
+		void CCube::Stop()
+		{
+			messageInject->Stop();
 		}
 	}
 }

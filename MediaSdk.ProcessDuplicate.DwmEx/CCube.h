@@ -1,15 +1,17 @@
 #pragma once
-#include <windows.h>
+ 
 #include <d3d11.h>
+#include "WindowMessageInject.h"
 #include "DwmEx.h"
+
 
 namespace MediaSdk
 {
-	using namespace DwmEx;
+	using namespace ProcessDuplicate::Common;
 	namespace DxRender
 	{
-		public ref class CCube
-		{ 
+		public  class CCube
+		{
 		private:
 			HINSTANCE m_hInst;
 			D3D_DRIVER_TYPE m_driverType;
@@ -21,25 +23,27 @@ namespace MediaSdk
 			IDXGISwapChain* m_pSwapChain = NULL;
 			ID3D11RenderTargetView* m_pRenderTargetView = NULL;
 			ID3D11Texture2D* outputBufffer;
+			D3D11_TEXTURE2D_DESC* remoting_texture_desc;
 			void InitDevice();
-			DwmExManager^ dwmExManager;
+			WindowMessageInject* messageInject;
+			PFDwmGetDxSharedSurface DwmGetDxSharedSurface;
+			HANDLE targetShardSurface = nullptr;
+			//DwmExManager^ dwmExManager;
 		public:
-			property  DwmExManager^ Manager
-			{
-				DwmExManager^ get()
-				{
-					return dwmExManager;
-				}
+			_declspec(property(get = GetRemotingDESC)) D3D11_TEXTURE2D_DESC* Remoting_DESC;
 
-				void set(DwmExManager^ value)
-				{
-					dwmExManager = value;
-				}
-			}
 			CCube();
+			D3D11_TEXTURE2D_DESC* GetRemotingDESC()
+			{
+				return remoting_texture_desc;
+			}
 			HRESULT Render(void* pResource, bool isNewSurface);
 			HRESULT InitRenderTarget(void* pResource);
 			void SetUpViewport();
+			void Initialize(HWND handle);
+			bool InternalInitailize();
+			void Resize();
+			void Stop();
 		};
 	}
 }

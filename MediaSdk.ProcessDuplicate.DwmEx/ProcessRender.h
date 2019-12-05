@@ -21,11 +21,11 @@ namespace MediaSdk
 		private:
 			D3D11Image^ imageSource;
 			ProcessDuplicateManager^ duplicate_manager;
-			CCube^ cCube;
+			CCube* cCube;
 		public:
-			property CCube^ Cube
+			property CCube* Cube
 			{
-				CCube^ get()
+				CCube* get()
 				{
 					return this->cCube;
 				}

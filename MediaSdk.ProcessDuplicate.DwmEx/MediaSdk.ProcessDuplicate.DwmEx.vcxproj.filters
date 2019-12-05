@@ -45,9 +45,6 @@
     <ClInclude Include="MediaClock.h">
       <Filter>Header Files\Media</Filter>
     </ClInclude>
-    <ClInclude Include="DwmEx.h">
-      <Filter>Header Files\Common</Filter>
-    </ClInclude>
     <ClInclude Include="Util.h">
       <Filter>Header Files\Common</Filter>
     </ClInclude>
@@ -78,6 +75,9 @@
     <ClInclude Include="MessageWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DwmEx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -91,9 +91,6 @@
     </ClCompile>
     <ClCompile Include="MediaClock.cpp">
       <Filter>Source Files\Media</Filter>
-    </ClCompile>
-    <ClCompile Include="DwmEx.cpp">
-      <Filter>Source Files\Common</Filter>
     </ClCompile>
     <ClCompile Include="Util.cpp">
       <Filter>Source Files\Common</Filter>
@@ -129,6 +126,9 @@
       <Filter>Source Files\Common</Filter>
     </ClCompile>
     <ClCompile Include="MessageWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DwmEx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

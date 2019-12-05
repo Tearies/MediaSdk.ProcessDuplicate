@@ -1,10 +1,6 @@
 #include "pch.h"
 #include "ProcessDuplicateManager.h"
-#include "ProcessConfiguration.h"
 
-using namespace MediaSdk::DwmEx;
-using namespace MediaSdk::Clock;
-using namespace MediaSdk::Common;
 
 void ProcessDuplicateManager::OnClockTick(Object^ sender, EventArgs^ args)
 {
@@ -19,7 +15,7 @@ void ProcessDuplicateManager::DoRender()
 }
 
 ProcessDuplicateManager::ProcessDuplicateManager() :
-	dwm_ex_manager(gcnew DwmExManager()),
+
 	media_context(gcnew MediaContext()),
 	currentUIDistpatcher(Application::Current->Dispatcher)
 {
@@ -33,7 +29,6 @@ ProcessDuplicateManager::~ProcessDuplicateManager()
 	media_context->ClockTick -= gcnew System::EventHandler(this, &ProcessDuplicateManager::OnClockTick);
 	media_context->Stop();
 	delete media_context;
-	delete dwm_ex_manager;
 }
 
 void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
@@ -49,16 +44,15 @@ void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
 	targetProcess->Exited += gcnew System::EventHandler(this, &MediaSdk::Common::ProcessDuplicateManager::OnExited);
 	targetProcess->WaitForInputIdle();
 	Thread::Sleep(1000);
-	dwm_ex_manager->Initialize(reinterpret_cast<HWND>(targetProcess->MainWindowHandle.ToInt32()));
-	process_configuration->Application->Manager = dwm_ex_manager;
-	process_configuration->ImageSource->SetPixelSize(dwm_ex_manager->TEXTURE2D_DESC->Width, dwm_ex_manager->TEXTURE2D_DESC->Height);
+	process_configuration->Application->Initialize(reinterpret_cast<HWND>(targetProcess->MainWindowHandle.ToInt32()));
+	process_configuration->ImageSource->SetPixelSize(process_configuration->Application->Remoting_DESC->Width, process_configuration->Application->Remoting_DESC->Height);
 	media_context->ClockTick += gcnew System::EventHandler(this, &ProcessDuplicateManager::OnClockTick);
 	media_context->Start();
 }
 
 void ProcessDuplicateManager::End()
 {
-	dwm_ex_manager->Stop();
+	process_configuration->Application->Stop();
 	if (nullptr != targetProcess)
 		targetProcess->Kill();
 }
@@ -66,8 +60,8 @@ void ProcessDuplicateManager::End()
 
 void ProcessDuplicateManager::OnTargetSizeChanged(System::Object^ sender, System::EventArgs^ e)
 {
-	dwm_ex_manager->InternalInitailize();
-	process_configuration->ImageSource->SetPixelSize(dwm_ex_manager->TEXTURE2D_DESC->Width, dwm_ex_manager->TEXTURE2D_DESC->Height);
+	process_configuration->Application->Resize();
+	process_configuration->ImageSource->SetPixelSize(process_configuration->Application->Remoting_DESC->Width, process_configuration->Application->Remoting_DESC->Height);
 }
 
 
@@ -77,7 +71,7 @@ void ProcessDuplicateManager::OnShutdownStarted(Object^ sender, EventArgs^ e)
 }
 
 
-void MediaSdk::Common::ProcessDuplicateManager::OnExited(System::Object^ sender, System::EventArgs^ e)
+void ProcessDuplicateManager::OnExited(System::Object^ sender, System::EventArgs^ e)
 {
 	targetProcess = nullptr;
 }

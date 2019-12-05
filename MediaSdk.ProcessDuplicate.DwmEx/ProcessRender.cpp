@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "ProcessRender.h"
-#include "D3D11Image.h"
+ 
 
 #pragma once
 using namespace MediaSdk::Controls;
@@ -45,7 +45,7 @@ namespace MediaSdk
 
 void ProcessRender::OnLoaded(Object^ sender, RoutedEventArgs^ e)
 {
-	cCube = gcnew CCube();
+	cCube = new CCube();
 	duplicate_manager = gcnew ProcessDuplicateManager();
 	const auto control = gcnew Image();
 	control->Stretch = Stretch::Fill;
