@@ -4,7 +4,7 @@
 #include "D3D11Image.h"
 #include "ProcessConfiguration.h"
 
-using namespace MediaSdk::DwmEx;
+ 
 using namespace MediaSdk::Clock;
 using namespace System::Diagnostics;
 using namespace MediaSdk::Common;
@@ -19,10 +19,7 @@ namespace MediaSdk
 		{
 		private:
 			Dispatcher^ currentUIDistpatcher;
-			/**
-			 * @brief DWM扩展管理
-			 */
-			DwmExManager^ dwm_ex_manager;
+			 
 
 			/**
 			 * 媒体上下文
