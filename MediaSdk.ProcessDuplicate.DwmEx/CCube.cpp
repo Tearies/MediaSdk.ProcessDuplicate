@@ -150,8 +150,8 @@ namespace MediaSdk
 			hr = m_pd3dDevice->OpenSharedResource(targetShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
 			ID3D11Resource* resource;
 			m_pRenderTargetView->GetResource(&resource);
-			m_pImmediateContext->CopyResource(resource, pSharedTexture);
-			Util::SaveTextureToBmp("D:\\Render.jpeg", pSharedTexture);
+			m_pImmediateContext->CopySubresourceRegion(resource,0,0,0,0, pSharedTexture,0,nullptr);
+			//Util::SaveTextureToBmp("D:\\Render.jpeg", pSharedTexture);
 			if (nullptr != m_pImmediateContext)
 				m_pImmediateContext->Flush();
 			ReleaseInterface(resource);
