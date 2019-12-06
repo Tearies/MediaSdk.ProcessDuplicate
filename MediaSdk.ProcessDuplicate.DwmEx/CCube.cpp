@@ -151,6 +151,7 @@ namespace MediaSdk
 			ID3D11Resource* resource;
 			m_pRenderTargetView->GetResource(&resource);
 			m_pImmediateContext->CopyResource(resource, pSharedTexture);
+			Util::SaveTextureToBmp("D:\\Render.jpeg", pSharedTexture);
 			if (nullptr != m_pImmediateContext)
 				m_pImmediateContext->Flush();
 			ReleaseInterface(resource);
