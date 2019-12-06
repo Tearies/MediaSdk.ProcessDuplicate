@@ -53,67 +53,67 @@ namespace MediaSdk
 
 
 
-			// Compile the pixel shader
-			ID3DBlob* pPSBlob = NULL;
-			hr = CompileShaderFromFile(L"./Shader/PixelShader.hlsl", "PS", "ps_5_0", &pPSBlob);
+			//// Compile the pixel shader
+			//ID3DBlob* pPSBlob = NULL;
+			//hr = CompileShaderFromFile(L"./Shader/PixelShader.hlsl", "PS", "ps_5_0", &pPSBlob);
 
 
-			// Create the pixel shader
-			hr = m_pd3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &m_pPixelShader);
-			pPSBlob->Release();
+			//// Create the pixel shader
+			//hr = m_pd3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &m_pPixelShader);
+			//pPSBlob->Release();
 
 
-			// Compile the vertex shader
-			ID3DBlob* pVSBlob = NULL;
-			hr = CompileShaderFromFile(L"./Shader/PixelShader.hlsl", "VS", "vs_5_0", &pVSBlob);
+			//// Compile the vertex shader
+			//ID3DBlob* pVSBlob = NULL;
+			//hr = CompileShaderFromFile(L"./Shader/PixelShader.hlsl", "VS", "vs_5_0", &pVSBlob);
 
 
-			// Create the vertex shader
-			hr = m_pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &m_pVertexShader);
+			//// Create the vertex shader
+			//hr = m_pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &m_pVertexShader);
 
 
-			// Define the input layout
-			D3D11_INPUT_ELEMENT_DESC layout[] =
-			{
-				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			};
-			UINT numElements = ARRAYSIZE(layout);
+			//// Define the input layout
+			//D3D11_INPUT_ELEMENT_DESC layout[] =
+			//{
+			//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			//	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			//};
+			//UINT numElements = ARRAYSIZE(layout);
 
-			// Create the input layout
-			hr = m_pd3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
-				pVSBlob->GetBufferSize(), &m_pVertexLayout);
-			pVSBlob->Release();
+			//// Create the input layout
+			//hr = m_pd3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
+			//	pVSBlob->GetBufferSize(), &m_pVertexLayout);
+			//pVSBlob->Release();
 
 
-			// Set the input layout
-			m_pImmediateContext->IASetInputLayout(m_pVertexLayout);
+			//// Set the input layout
+			//m_pImmediateContext->IASetInputLayout(m_pVertexLayout);
 
-			Vertex vertices[] =
-			{
-				 { new RawVector3(-1.0f, 1.0f, 0.5f),  new RawVector2(0.0f, 0.0f) },
-				 { new RawVector3(1.0f, 1.0f, 0.5f), new RawVector2(1.0f, 0.0f) },
-				 { new RawVector3(-1.0f, -1.0f, 0.5f), new RawVector2(0.0f, 1.0f) },
-				 { new RawVector3(1.0f, -1.0f, 0.5f), new RawVector2(1.0f, 1.0f) }
-			};
+			//Vertex vertices[] =
+			//{
+			//	 { new RawVector3(-1.0f, 1.0f, 0.5f),  new RawVector2(0.0f, 0.0f) },
+			//	 { new RawVector3(1.0f, 1.0f, 0.5f), new RawVector2(1.0f, 0.0f) },
+			//	 { new RawVector3(-1.0f, -1.0f, 0.5f), new RawVector2(0.0f, 1.0f) },
+			//	 { new RawVector3(1.0f, -1.0f, 0.5f), new RawVector2(1.0f, 1.0f) }
+			//};
 
-			D3D11_BUFFER_DESC bd;
-			ZeroMemory(&bd, sizeof(bd));
-			bd.Usage = D3D11_USAGE_DEFAULT;
-			bd.ByteWidth = sizeof(Vertex) * 4;
-			bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-			bd.CPUAccessFlags = 0;
-			D3D11_SUBRESOURCE_DATA InitData;
-			ZeroMemory(&InitData, sizeof(InitData));
-			InitData.pSysMem = vertices;
-			hr = m_pd3dDevice->CreateBuffer(&bd, &InitData, &m_pVertexBuffer);
+			//D3D11_BUFFER_DESC bd;
+			//ZeroMemory(&bd, sizeof(bd));
+			//bd.Usage = D3D11_USAGE_DEFAULT;
+			//bd.ByteWidth = sizeof(Vertex) * 4;
+			//bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+			//bd.CPUAccessFlags = 0;
+			//D3D11_SUBRESOURCE_DATA InitData;
+			//ZeroMemory(&InitData, sizeof(InitData));
+			//InitData.pSysMem = vertices;
+			//hr = m_pd3dDevice->CreateBuffer(&bd, &InitData, &m_pVertexBuffer);
 
-			UINT stride = sizeof(Vertex);
-			UINT offset = 0;
-			m_pImmediateContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+			//UINT stride = sizeof(Vertex);
+			//UINT offset = 0;
+			//m_pImmediateContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
 
-			// Set primitive topology
-			m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			//// Set primitive topology
+			//m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
 
