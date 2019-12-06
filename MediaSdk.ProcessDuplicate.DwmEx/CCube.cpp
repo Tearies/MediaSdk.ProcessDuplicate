@@ -194,12 +194,8 @@ namespace MediaSdk
 				return hr;
 			}
 			ReleaseInterface(tempResource11);
-			D3D11_RENDER_TARGET_VIEW_DESC rtDesc;
-			rtDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-			rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-			rtDesc.Texture2D.MipSlice = 0;
 			ID3D11RenderTargetView* pRenderTargetView;
-			hr = m_pd3dDevice->CreateRenderTargetView(pOutputResource, &rtDesc, &pRenderTargetView);
+			hr = m_pd3dDevice->CreateRenderTargetView(pOutputResource, NULL, &pRenderTargetView);
 			if (FAILED(hr))
 			{
 				return hr;
