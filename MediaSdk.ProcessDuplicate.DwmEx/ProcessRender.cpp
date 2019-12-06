@@ -46,7 +46,16 @@ namespace MediaSdk
 void ProcessRender::OnLoaded(Object^ sender, RoutedEventArgs^ e)
 {
 	cCube = new CCube();
-	duplicate_manager = gcnew ProcessDuplicateManager();
+	auto hwndTarget = dynamic_cast<HwndTarget^>(PresentationSource::FromVisual(this)->CompositionTarget);
+	int dpiScale = 1.0;
+	if (hwndTarget != nullptr)
+	{
+		dpiScale = hwndTarget->TransformToDevice.M11;
+	}
+
+	int surfWidth = (int)(this->ActualWidth < 0 ? 0 : Math::Ceiling(this->ActualWidth * dpiScale));
+	int surfHeight = (int)(this->ActualHeight < 0 ? 0 : Math::Ceiling(this->ActualHeight * dpiScale));
+	duplicate_manager = gcnew ProcessDuplicateManager(surfWidth, surfHeight);
 	const auto control = gcnew Image();
 	control->Stretch = Stretch::Fill;
 	this->Child = control;

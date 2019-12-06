@@ -125,7 +125,8 @@ namespace MediaSdk
 			m_featureLevel = D3D_FEATURE_LEVEL_11_0;
 			m_pd3dDevice = NULL;
 			m_pImmediateContext = NULL;
-			remoting_texture_desc = new D3D11_TEXTURE2D_DESC;
+			remoting_texture_desc = new D3D11_TEXTURE2D_DESC();
+			ZeroMemory(remoting_texture_desc, sizeof(remoting_texture_desc));
 			messageInject = new WindowMessageInject;
 			DwmGetDxSharedSurface = Util::LoadWinAPILibraryAs<PFDwmGetDxSharedSurface>("user32.dll", "DwmGetDxSharedSurface");
 			this->InitDevice();
@@ -243,6 +244,10 @@ namespace MediaSdk
 		bool CCube::InternalInitailize()
 		{
 			HWND targetWindow = messageInject->TargetHandle;
+			if (targetWindow==NULL)
+			{
+				return false;
+			}
 			LUID adapterLuid = { 0, };
 			ULONG pFmtWindow = 0;
 			ULONG pPresentFlags = 0;

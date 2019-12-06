@@ -23,7 +23,7 @@ namespace MediaSdk
 			Action<IntPtr, bool>^ m_renderD2D;
 			D3DImage^ m_d3dImage;
 			DependencyPropertyChangedEventHandler^ m_frontBufferAvailableChanged;
-			UINT m_pixelWidth, m_pixelHeight;
+			UINT m_pixelWidth = 0, m_pixelHeight = 0;
 			HWND m_hwnd;
 
 			IDirect3D9Ex* m_pD3D9;

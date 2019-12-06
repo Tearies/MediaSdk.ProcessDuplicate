@@ -2,6 +2,7 @@
 #include "ProcessDuplicateManager.h"
 
 
+
 void ProcessDuplicateManager::OnClockTick(Object^ sender, EventArgs^ args)
 {
 	Action^ action = gcnew Action(this, &ProcessDuplicateManager::DoRender);
@@ -14,10 +15,10 @@ void ProcessDuplicateManager::DoRender()
 	process_configuration->ImageSource->RequestRender();
 }
 
-ProcessDuplicateManager::ProcessDuplicateManager() :
+ProcessDuplicateManager::ProcessDuplicateManager(int surfWidth, int surfHeight) :
 	messageWindow(gcnew  MessageWindow()),
 	media_context(gcnew MediaContext()),
-	currentUIDistpatcher(Application::Current->Dispatcher)
+	currentUIDistpatcher(Application::Current->Dispatcher), m_surfWidth(surfWidth), m_surfHeight(surfHeight)
 {
 	currentUIDistpatcher->ShutdownStarted += gcnew System::EventHandler(this, &MediaSdk::Common::ProcessDuplicateManager::OnShutdownStarted);
 	messageWindow->TargetSizeChanged += gcnew System::EventHandler<System::EventArgs^>(this, &MediaSdk::Common::ProcessDuplicateManager::OnTargetSizeChanged);
@@ -28,6 +29,41 @@ ProcessDuplicateManager::~ProcessDuplicateManager()
 	media_context->ClockTick -= gcnew System::EventHandler(this, &ProcessDuplicateManager::OnClockTick);
 	media_context->Stop();
 	delete media_context;
+}
+
+void ProcessDuplicateManager::SetPixelSize()
+{
+	auto mainhwnd = reinterpret_cast<HWND>(targetProcess->MainWindowHandle.ToInt32());
+	process_configuration->Application->Initialize(mainhwnd);
+	auto width = process_configuration->Application->Remoting_DESC->Width;
+	auto height = process_configuration->Application->Remoting_DESC->Height;
+	if (mainhwnd == NULL)
+	{
+		width = this->m_surfWidth;
+		height = this->m_surfHeight;
+	}
+	process_configuration->ImageSource->SetPixelSize(width, height);
+
+	if(mainhwnd!=NULL)
+	{
+		media_context->ClockTick += gcnew System::EventHandler(this, &ProcessDuplicateManager::OnClockTick);
+		media_context->Start();
+	}
+}
+
+void ProcessDuplicateManager::OnDelayStart()
+{
+	HWND mainhwnd = NULL;
+	do {
+		mainhwnd = reinterpret_cast<HWND>(targetProcess->MainWindowHandle.ToInt32());
+		Thread::Sleep(30);
+	} while (mainhwnd == NULL);
+
+	Action^ action = gcnew Action(this, &ProcessDuplicateManager::SetPixelSize);
+	currentUIDistpatcher->Invoke(DispatcherPriority::Normal,
+		action);
+
+
 }
 
 void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
@@ -43,12 +79,13 @@ void ProcessDuplicateManager::Start(ProcessConfiguration^ configuration)
 	targetProcess->EnableRaisingEvents = true;
 	targetProcess->Exited += gcnew System::EventHandler(this, &MediaSdk::Common::ProcessDuplicateManager::OnExited);
 	targetProcess->WaitForInputIdle();
-	Thread::Sleep(1000);
-	process_configuration->Application->Initialize(reinterpret_cast<HWND>(targetProcess->MainWindowHandle.ToInt32()));
-	process_configuration->ImageSource->SetPixelSize(process_configuration->Application->Remoting_DESC->Width, process_configuration->Application->Remoting_DESC->Height);
-	media_context->ClockTick += gcnew System::EventHandler(this, &ProcessDuplicateManager::OnClockTick);
-	media_context->Start();
+	auto action = gcnew Action(this, &ProcessDuplicateManager::OnDelayStart);
+	Tasks::Task::Factory->StartNew(action);
+	this->SetPixelSize();
 }
+
+
+
 
 void ProcessDuplicateManager::End()
 {

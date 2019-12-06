@@ -25,6 +25,8 @@ namespace MediaSdk
 			 * 媒体上下文
 			 */
 			MediaContext^ media_context;
+			void SetPixelSize();
+			void OnDelayStart();
 			/**
 			 * @brief 时钟计时回调
 			 */
@@ -44,8 +46,10 @@ namespace MediaSdk
 			 * @brief 本地消息窗口
 			 */
 			MessageWindow^ messageWindow;
+			int m_surfWidth;
+			int m_surfHeight;
 		public:
-			ProcessDuplicateManager();
+			ProcessDuplicateManager(int surfWidth,int surfHeight);
 			~ProcessDuplicateManager();
 			property IntPtr RemottingHandle
 			{

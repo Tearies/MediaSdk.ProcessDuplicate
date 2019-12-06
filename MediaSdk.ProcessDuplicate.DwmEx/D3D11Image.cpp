@@ -81,8 +81,6 @@ namespace MediaSdk
 		void D3D11Image::RequestRender()
 		{
 			this->EnsureHelper();
-
-			// Don't bother with a call if there's no callback registered.
 			if (nullptr != this->OnRender)
 			{
 				this->helper->RequestRenderD2D();
