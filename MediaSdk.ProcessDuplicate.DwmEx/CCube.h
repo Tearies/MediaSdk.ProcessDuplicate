@@ -22,7 +22,6 @@ namespace MediaSdk
 			ID3D11DeviceContext* m_pImmediateContext;
 			IDXGISwapChain* m_pSwapChain = NULL;
 			ID3D11RenderTargetView* m_pRenderTargetView = NULL;
-			ID3D11DepthStencilView* m_pDepthStencilView;
 			ID3D11Texture2D* outputBufffer;
 			D3D11_TEXTURE2D_DESC* remoting_texture_desc;
 			void InitDevice();

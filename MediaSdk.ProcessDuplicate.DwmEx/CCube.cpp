@@ -148,7 +148,7 @@ namespace MediaSdk
 			m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, ClearColor);
 			ID3D11Texture2D* pSharedTexture = nullptr;
 			hr = m_pd3dDevice->OpenSharedResource(targetShardSurface, __uuidof(ID3D11Texture2D), (void**)(&pSharedTexture));
-			ID3D11Resource* resource; 
+			ID3D11Resource* resource;
 			m_pRenderTargetView->GetResource(&resource);
 			m_pImmediateContext->CopyResource(resource, pSharedTexture);
 			if (nullptr != m_pImmediateContext)
@@ -203,15 +203,6 @@ namespace MediaSdk
 			{
 				return hr;
 			}
-
-			D3D11_DEPTH_STENCIL_VIEW_DESC depthdec;
-			depthdec.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-			depthdec.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-			depthdec.Texture2D.MipSlice = 0;
-
-			ID3D11DepthStencilView* pDepthStencilView;
-			m_pd3dDevice->CreateDepthStencilView(pOutputResource, &depthdec, &pDepthStencilView);
-
 			D3D11_TEXTURE2D_DESC outputResourceDesc;
 			pOutputResource->GetDesc(&outputResourceDesc);
 			if (outputResourceDesc.Width != m_Width || outputResourceDesc.Height != m_Height)
@@ -222,10 +213,10 @@ namespace MediaSdk
 				SetUpViewport();
 			}
 
-			m_pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView, pDepthStencilView);
+			m_pImmediateContext->OMSetRenderTargets(1, &pRenderTargetView, NULL);
 			ReleaseInterface(m_pRenderTargetView);
 			m_pRenderTargetView = pRenderTargetView;
-			m_pDepthStencilView = pDepthStencilView;
+		 
 			ReleaseInterface(pOutputResource);
 			return hr;
 		}
