@@ -34,6 +34,8 @@ namespace MediaSdk
 					case EVENT_SYSTEM_MOVESIZEEND:
 					case EVENT_SYSTEM_MINIMIZESTART:
 					case EVENT_SYSTEM_MINIMIZEEND:
+					case EVENT_SYSTEM_SWITCHEND:
+					case EVENT_OBJECT_LOCATIONCHANGE:
 						::SendMessageA((HWND)temp, VBIDEFINEMSGCODE, 0, 0);
 						break;
 					}
